@@ -1,145 +1,115 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
+	<meta name="generator" content="Hugo 0.147.3">
   <meta charset="UTF-8" />
-  <title>{{ .Title }} | Harshit Bhatt</title>
+  <title>Home | Harshit Bhatt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/css/styles.css" />
-  <style>
-    html {
-      transition: background-color 0.5s ease, color 0.5s ease;
-    }
-  </style>
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
-  <!-- Early theme fix -->
-  <script>
-    (function() {
-      const theme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (theme === 'dark' || (!theme && prefersDark)) {
-        document.documentElement.classList.add('dark');
-      }
-    })();
-  </script>
 </head>
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-black text-gray-100 font-sans min-h-screen flex flex-col">
 
-<body class="bg-gradient-to-br from-gray-50 via-white to-gray-200 text-gray-900 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-black dark:text-gray-100 font-sans min-h-screen flex flex-col">
-  <div class="hidden dark:bg-black dark:text-white dark:border-gray-700 dark:hover:text-indigo-400"></div>
-
-  <header class="bg-white dark:bg-gray-900 bg-opacity-90 dark:bg-opacity-80 backdrop-blur-md sticky top-0 z-50 shadow-md">
+  <header class="bg-gray-900 bg-opacity-80 backdrop-blur-md sticky top-0 z-50 shadow-md">
     <div class="container mx-auto flex justify-between items-center py-4 px-6">
       <h1 class="text-3xl font-bold tracking-wide">
-        <a href="{{ "/" | relURL }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Harshit Bhatt</a>
+        <a href="/" class="hover:text-indigo-400 transition">Harshit Bhatt</a>
       </h1>
 
-      <nav class="flex items-center space-x-6 text-lg">
-        {{ range site.Menus.main }}
-          <a href="{{ .URL | relURL }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">{{ .Name }}</a>
-        {{ end }}
-
-        <!--  Corrected Theme Toggle Switch -->
-        <label for="theme-toggle" class="ml-4 relative inline-flex items-center cursor-pointer">
-          <input type="checkbox" id="theme-toggle" class="sr-only" />
-          <div class="w-11 h-6 bg-gray-300 rounded-full transition-all duration-300" id="toggle-background"></div>
-          <span class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300" id="toggle-button"></span>
-        </label>                
+      <nav>
+        <ul class="flex space-x-6 text-lg">
+          
+            <li>
+              <a href="/bio/" class="hover:text-indigo-400 transition font-medium">Bio</a>
+            </li>
+          
+            <li>
+              <a href="/research/" class="hover:text-indigo-400 transition font-medium">Research</a>
+            </li>
+          
+            <li>
+              <a href="/news/" class="hover:text-indigo-400 transition font-medium">News</a>
+            </li>
+          
+            <li>
+              <a href="/teaching/" class="hover:text-indigo-400 transition font-medium">Teaching</a>
+            </li>
+          
+            <li>
+              <a href="/explore/" class="hover:text-indigo-400 transition font-medium">Explore</a>
+            </li>
+          
+        </ul>
       </nav>
     </div>
   </header>
 
-  <main class="flex-grow container mx-auto px-6 py-12 max-w-5xl text-gray-900 dark:text-gray-100">
+  <main class="flex-grow container mx-auto px-6 py-12 max-w-5xl">
+    
 <div class="max-w-4xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-  <!-- Profile Image and Social Links -->
-  <div class="md:col-span-1 flex flex-col items-center">
-    <img src="/images/avatar.jpg" alt="Harshit Bhatt" class="rounded-full w-40 h-40 object-cover shadow-xl mb-4">
-    <div class="flex justify-center space-x-4">
-      <a href="https://linkedin.com/in/harshit-bhatt" target="_blank" class="hover:text-blue-600 dark:hover:text-blue-400">
-        <i class="fab fa-linkedin fa-lg"></i>
+  
+  <div class="md:col-span-1 flex justify-center md:justify-start">
+    <img src="/images/avatar.jpg" alt="Harshit Bhatt" class="rounded-full w-40 h-40 object-cover shadow-xl">
+  </div>
+
+  
+  <div class="md:col-span-2 space-y-4">
+    <h1 class="text-4xl font-bold text-gray-900">Harshit Bhatt</h1>
+    <p class="text-lg text-gray-700">PhD Student in Applied Mathematics<br>NC State University</p>
+    <p class="text-gray-600">📧 bhatt.harshit@ncsu.edu</p>
+    <p class="text-gray-600">📍 SAS Hall, Room 3213</p>
+
+    
+    <div class="flex space-x-4 pt-2">
+      <a href="https://linkedin.com/in/harshit-bhatt" target="_blank" class="hover:text-blue-600">
+        <i class="lucide lucide-linkedin w-6 h-6"></i>
       </a>
-      <a href="https://scholar.google.com/citations?user=4cuMkBEAAAAJ&hl=en" target="_blank" class="hover:text-gray-700 dark:hover:text-gray-300">
-        <i class="fas fa-graduation-cap fa-lg"></i>
+      <a href="https://scholar.google.com/citations?user=4cuMkBEAAAAJ&hl=en" target="_blank" class="hover:text-gray-700">
+        <i class="lucide lucide-graduation-cap w-6 h-6"></i>
       </a>
-      <a href="https://orcid.org/0009-0005-0276-5212" target="_blank" class="hover:text-green-600 dark:hover:text-green-400">
-        <i class="fab fa-orcid fa-lg"></i>
+      <a href="https://orcid.org/0009-0005-0276-5212" target="_blank" class="hover:text-green-600">
+        <i class="lucide lucide-link w-6 h-6"></i>
       </a>
     </div>
   </div>
-
-  <!-- Name, Contact -->
-  <div class="md:col-span-2 space-y-4">
-    <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100">Harshit Bhatt</h1>
-    <p class="text-lg text-gray-700 dark:text-gray-300">PhD Student in Applied Mathematics<br>NC State University</p>
-    <p class="text-gray-600 dark:text-gray-400 flex items-center space-x-2">
-      <i class="fas fa-envelope fa-lg"></i>
-      <span>hbhatt@ncsu.edu</span>
-    </p>
-    <p class="text-gray-600 dark:text-gray-400 flex items-center space-x-2">
-      <i class="fas fa-map-marker-alt fa-lg"></i>
-      <span>SAS Hall, Room 3149</span>
-    </p>
-  </div>
 </div>
 
-<!-- About Me -->
+
 <section class="max-w-4xl mx-auto px-6 py-8">
-  <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">About Me</h2>
-  <p class="text-gray-700 dark:text-gray-300 mb-4">
-    I am a Graduate Researcher in the department of Mathematics at NC State; I (have) also serve(d) the department as an Instructor and Teaching Assistant. My affiliation with some organisations is as follows:
-  </p>
-  <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 mb-4">
-    <li>I earned a MS in Applied Mathematics from NC State University in Fall 2024.</li>
-    <li>I obtained M.Sc. in Mathematics from the National Institute Of Technology, Tiruchirappalli in 2022.</li>
-    <li>I was an Intern at NIT Tiruchirappalli (2021) under the guidance of Dr. K. Murugesan.</li>
-    <li>I gained a B.Sc. in Math/Physics/Chemistry from Ch. Charan Singh University, Meerut in 2019</li>
+  <h2 class="text-2xl font-semibold text-gray-800 mb-4">About Me</h2>
+  <p class="text-gray-700 mb-4">I am a PhD student at NC State University, passionate about mathematical modeling, numerical algorithms, and scientific discovery through computation.</p>
+
+  <h3 class="text-xl font-semibold text-gray-800">Education</h3>
+  <ul class="list-disc list-inside text-gray-700 mb-4">
+    <li>PhD in Applied Mathematics, NC State University (2023–Present)</li>
+    <li>MS in Applied Mathematics, NC State University (2023–2024)</li>
+    <li>M.Sc. in Mathematics, National Institute Of Techonology, Tiruchirappalli, (2020–2022)</li>
+    <li>B.Sc. in Math/Physics/Chemistry, Ch. Charan Singh University, Meerut, (2016–2019)</li>
+  </ul>
+
+  <h3 class="text-xl font-semibold text-gray-800">Experience</h3>
+  <ul class="list-disc list-inside text-gray-700">
+    <li>Graduate Researcher at Mathematics department, NC State</li>
+    <li>Intern – Soliton Methods, Schrödinger Equation, [NIT Tiruchirappalli/Dr. K. Murugesan]</li>
+    <li>Graduate Instructor and Teaching Assistant, NC State</li>
   </ul>
 </section>
-<!-- Research Interests -->
+
+
 <section class="max-w-4xl mx-auto px-6 py-8">
-  <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Research Interests</h2>
-  <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-4">Research Interests</h2>
+  <p class="text-gray-700 leading-relaxed">
     My research focuses on numerical linear algebra, inverse problems, PDE-constrained optimization, and scientific computing.
     I am particularly interested in efficient solvers for large-scale systems and data-driven methods in computational science.
   </p>
 </section>
-</main>
 
-  <footer class="bg-white dark:bg-gray-900 bg-opacity-90 dark:bg-opacity-80 backdrop-blur-md text-center text-gray-500 dark:text-gray-400 py-6 mt-12 border-t border-gray-200 dark:border-gray-700">
-    &copy; 2025 Harshit Bhatt. All rights reserved.
+
+
+  </main>
+
+  <footer class="bg-gray-900 bg-opacity-80 backdrop-blur-md text-center text-gray-400 py-6 mt-12 border-t border-gray-700">
+    © 2025 Harshit Bhatt. All rights reserved.
   </footer>
 
-  
-  <!--  Toggle logic script -->
-  <script>
-    const toggleSwitch = document.getElementById('theme-toggle');
-    const root = document.documentElement;
-    const toggleBackground = document.getElementById('toggle-background');
-    const toggleButton = document.getElementById('toggle-button');
-
-    // Initialize checkbox state
-    if (localStorage.theme === 'dark' || (!localStorage.theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      toggleSwitch.checked = true;
-      toggleBackground.classList.add('bg-indigo-500');
-      toggleButton.style.transform = 'translateX(20px)';
-    } else {
-      toggleBackground.classList.remove('bg-indigo-500');
-      toggleButton.style.transform = '';
-    }
-
-    toggleSwitch.addEventListener('change', () => {
-      if (toggleSwitch.checked) {
-        root.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-        toggleBackground.classList.add('bg-indigo-500');
-        toggleButton.style.transform = 'translateX(20px)';
-      } else {
-        root.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-        toggleBackground.classList.remove('bg-indigo-500');
-        toggleButton.style.transform = '';
-      }
-    });
-  </script>
 </body>
-
 </html>
