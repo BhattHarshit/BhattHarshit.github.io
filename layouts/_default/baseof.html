@@ -4,33 +4,88 @@
   <meta charset="UTF-8" />
   <title>{{ .Title }} | Harshit Bhatt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="/css/styles.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    html {
+      transition: background-color 0.5s ease, color 0.5s ease;
+    }
+  </style>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+  <!-- Early theme fix -->
+  <script>
+    (function() {
+      const theme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (theme === 'dark' || (!theme && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans leading-relaxed min-h-screen flex flex-col">
-  <header class="bg-white shadow-md">
+
+<body class="bg-gradient-to-br from-gray-50 via-white to-gray-200 text-gray-900 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-black dark:text-gray-100 font-sans min-h-screen flex flex-col">
+  <div class="hidden dark:bg-black dark:text-white dark:border-gray-700 dark:hover:text-indigo-400"></div>
+
+  <header class="bg-white dark:bg-gray-900 bg-opacity-90 dark:bg-opacity-80 backdrop-blur-md sticky top-0 z-50 shadow-md">
     <div class="container mx-auto flex justify-between items-center py-4 px-6">
-      <h1 class="text-2xl font-bold text-indigo-600">
-        <a href="{{ "/" | relURL }}">Harshit Bhatt</a>
+      <h1 class="text-3xl font-bold tracking-wide">
+        <a href="{{ "/" | relURL }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Harshit Bhatt</a>
       </h1>
-      <nav>
-        <ul class="flex space-x-6 text-gray-700 font-medium">
-          {{ range site.Menus.main }}
-            <li>
-              <a href="{{ .URL | relURL }}" class="hover:text-indigo-600 transition duration-200">{{ .Name }}</a>
-            </li>
-          {{ end }}
-        </ul>
+
+      <nav class="flex items-center space-x-6 text-lg">
+        {{ range site.Menus.main }}
+          <a href="{{ .URL | relURL }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">{{ .Name }}</a>
+        {{ end }}
+
+        <!--  Corrected Theme Toggle Switch -->
+        <label for="theme-toggle" class="ml-4 relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="theme-toggle" class="sr-only" />
+          <div class="w-11 h-6 bg-gray-300 rounded-full transition-all duration-300" id="toggle-background"></div>
+          <span class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300" id="toggle-button"></span>
+        </label>                
       </nav>
     </div>
   </header>
 
-  <main class="flex-grow container mx-auto px-6 py-10">
+  <main class="flex-grow container mx-auto px-6 py-12 max-w-5xl text-gray-900 dark:text-gray-100">
     {{ block "main" . }}{{ end }}
   </main>
 
-  <footer class="bg-white border-t text-center text-gray-500 text-sm py-6 mt-auto">
-    © 2025 Harshit Bhatt. All rights reserved.
+  <footer class="bg-white dark:bg-gray-900 bg-opacity-90 dark:bg-opacity-80 backdrop-blur-md text-center text-gray-500 dark:text-gray-400 py-6 mt-12 border-t border-gray-200 dark:border-gray-700">
+    &copy; 2025 Harshit Bhatt. All rights reserved.
   </footer>
+
+  <!--  Toggle logic script -->
+  <script>
+    const toggleSwitch = document.getElementById('theme-toggle');
+    const root = document.documentElement;
+    const toggleBackground = document.getElementById('toggle-background');
+    const toggleButton = document.getElementById('toggle-button');
+
+    // Initialize checkbox state
+    if (localStorage.theme === 'dark' || (!localStorage.theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      toggleSwitch.checked = true;
+      toggleBackground.classList.add('bg-indigo-500');
+      toggleButton.style.transform = 'translateX(20px)';
+    } else {
+      toggleBackground.classList.remove('bg-indigo-500');
+      toggleButton.style.transform = '';
+    }
+
+    toggleSwitch.addEventListener('change', () => {
+      if (toggleSwitch.checked) {
+        root.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+        toggleBackground.classList.add('bg-indigo-500');
+        toggleButton.style.transform = 'translateX(20px)';
+      } else {
+        root.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+        toggleBackground.classList.remove('bg-indigo-500');
+        toggleButton.style.transform = '';
+      }
+    });
+  </script>
 </body>
 </html>
