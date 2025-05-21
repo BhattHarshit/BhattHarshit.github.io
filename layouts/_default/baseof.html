@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ .Title }} | Harshit Bhatt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="/css/styles.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans leading-relaxed min-h-screen flex flex-col">
+  <header class="bg-white shadow-md">
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+      <h1 class="text-2xl font-bold text-indigo-600">
+        <a href="{{ "/" | relURL }}">Harshit Bhatt</a>
+      </h1>
+      <nav>
+        <ul class="flex space-x-6 text-gray-700 font-medium">
+          {{ range site.Menus.main }}
+            <li>
+              <a href="{{ .URL | relURL }}" class="hover:text-indigo-600 transition duration-200">{{ .Name }}</a>
+            </li>
+          {{ end }}
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-grow container mx-auto px-6 py-10">
+    {{ block "main" . }}{{ end }}
+  </main>
+
+  <footer class="bg-white border-t text-center text-gray-500 text-sm py-6 mt-auto">
+    © 2025 Harshit Bhatt. All rights reserved.
+  </footer>
+</body>
+</html>
