@@ -116,8 +116,8 @@
   </main>
 
   <footer class="bg-white dark:bg-gray-900 bg-opacity-90 dark:bg-opacity-80 backdrop-blur-md text-center text-gray-500 dark:text-gray-400 py-6 mt-12 border-t border-gray-200 dark:border-gray-700">
-     <p>© {{ now.Year }} Harshit Bhatt. All rights reserved.</p>
-  </footer>
+  &copy; <span id="year"></span> Harshit Bhatt. All rights reserved.
+</footer>
 
   <script>
   const toggleSwitch = document.getElementById('theme-toggle');
@@ -152,6 +152,9 @@
   });
 </script>
 
-  
+  <script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
 </body>
 </html>
