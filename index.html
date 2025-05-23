@@ -1,4 +1,70 @@
-{{ define "main" }}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta name="generator" content="Hugo 0.147.3"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="UTF-8" />
+  <title>Home | Harshit Bhatt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    html {
+      transition: background-color 0.5s ease, color 0.5s ease;
+    }
+  </style>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+
+
+  
+  <script>
+    (function() {
+      const theme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (theme === 'dark' || (!theme && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+</head>
+
+<body class="bg-gradient-to-br from-gray-50 via-white to-gray-200 text-gray-900 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-black dark:text-gray-100 font-sans min-h-screen flex flex-col">
+  <div class="hidden dark:bg-black dark:text-white dark:border-gray-700 dark:hover:text-indigo-400"></div>
+
+  <header class="bg-white dark:bg-gray-900 bg-opacity-90 dark:bg-opacity-80 backdrop-blur-md sticky top-0 z-50 shadow-md">
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+      <h1 class="text-3xl font-bold tracking-wide">
+        <a href="/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Home</a>
+      </h1>
+
+      <button id="mobile-menu-button" class="md:hidden flex justify-center w-8 h-8 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
+      <nav id="nav-menu" class="hidden md:flex items-center space-x-6 text-lg">
+        <a href="/research/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">Research</a>
+        <a href="/news/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">News</a>
+        <a href="/teaching/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">Teaching</a>
+        <a href="/explore/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">Explore</a>
+        <label for="theme-toggle" class="ml-4 relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="theme-toggle" class="sr-only" />
+          <div class="w-11 h-6 bg-gray-300 rounded-full transition-all duration-300" id="toggle-background"></div>
+          <span class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300" id="toggle-button"></span>
+        </label>
+      </nav>
+
+      <div id="mobile-menu" class="hidden md:hidden absolute top-16 left-0 w-full bg-white dark:bg-gray-900 shadow-md py-4">
+        <a href="/research/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Research</a>
+        <a href="/news/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">News</a>
+        <a href="/teaching/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Teaching</a>
+        <a href="/explore/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Explore</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow container mx-auto px-6 py-12 max-w-5xl text-gray-900 dark:text-gray-100">
+    {{ define "main" }}
   <div class="max-w-4xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
     <div class="md:col-span-1 flex flex-col items-center md:items-start">
       <img src="/images/avatar.jpg" alt="Harshit Bhatt" class="rounded-full w-40 h-40 object-cover shadow-xl mb-4">
@@ -28,24 +94,87 @@
     </div>
   </div>
 
-  <section class="max-w-4xl mx-auto px-6 py-8">
-    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">About Me</h2>
-    <p class="text-gray-700 dark:text-gray-300 mb-4">
-      I am a Graduate Researcher in the Department of Mathematics at NC State, where I also serve as a Graduate Instructor and Teaching Assistant. My academic and professional affiliations include:
-    </p>
-    <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 mb-4">
-      <li>M.S. in Applied Mathematics, NC State University (Fall 2024)</li>
-      <li>M.Sc. in Mathematics, National Institute of Technology, Tiruchirappalli (2022)</li>
-      <li>Research Intern, NIT Tiruchirappalli (2021)</li>
-      <li>B.Sc. in Mathematics, Physics, and Chemistry, Ch. Charan Singh University, Meerut (2019)</li>
-    </ul>
-  </section>
+    <section class="max-w-4xl mx-auto px-6 py-8">
+      <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">About Me</h2>
+      <p class="text-gray-700 dark:text-gray-300 mb-4">
+        I am a Graduate Researcher in the Department of Mathematics at NC State, where I also serve as a Graduate Instructor and Teaching Assistant. My academic and professional affiliations include:
+      </p>
+      <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 mb-4">
+        <li>M.S. in Applied Mathematics, NC State University (Fall 2024)</li>
+        <li>M.Sc. in Mathematics, National Institute of Technology, Tiruchirappalli (2022)</li>
+        <li>Research Intern, NIT Tiruchirappalli (2021)</li>
+        <li>B.Sc. in Mathematics, Physics, and Chemistry, Ch. Charan Singh University, Meerut (2019)</li>
+      </ul>
+    </section>
 
-  <section class="max-w-4xl mx-auto px-6 py-8">
-    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Research Interests</h2>
-    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-      My research focuses on numerical linear algebra, inverse problems, PDE-constrained optimization, and scientific computing.
-      I am particularly interested in efficient solvers for large-scale systems and data-driven methods in computational science.
-    </p>
-  </section>
-{{ end }}
+    <section class="max-w-4xl mx-auto px-6 py-8">
+      <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Research Interests</h2>
+      <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+        My research focuses on numerical linear algebra, inverse problems, PDE-constrained optimization, and scientific computing.
+        I am particularly interested in efficient solvers for large-scale systems and data-driven methods in computational science.
+      </p>
+    </section>
+    {{ end }}
+  </main>
+
+  <footer class="bg-white dark:bg-gray-900 bg-opacity-90 dark:bg-opacity-80 backdrop-blur-md text-center text-gray-500 dark:text-gray-400 py-6 mt-12 border-t border-gray-200 dark:border-gray-700">
+  &copy; <span id="year"></span> Harshit Bhatt. All rights reserved.
+</footer>
+
+  <script>
+  const toggleSwitch = document.getElementById('theme-toggle');
+  const toggleBackground = document.getElementById('toggle-background');
+  const toggleButton = document.getElementById('toggle-button');
+
+  const root = document.documentElement;
+
+  if (localStorage.theme === 'dark' || (!localStorage.theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    toggleSwitch.checked = true;
+    toggleBackground.classList.add('bg-indigo-500');
+    toggleButton.style.transform = 'translateX(20px)';
+    root.classList.add('dark');
+  } else {
+    toggleBackground.classList.remove('bg-indigo-500');
+    toggleButton.style.transform = '';
+    root.classList.remove('dark');
+  }
+
+  toggleSwitch.addEventListener('change', () => {
+    if (toggleSwitch.checked) {
+      root.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+      toggleBackground.classList.add('bg-indigo-500');
+      toggleButton.style.transform = 'translateX(20px)';
+    } else {
+      root.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+      toggleBackground.classList.remove('bg-indigo-500');
+      toggleButton.style.transform = '';
+    }
+  });
+</script>
+
+  <script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+  <script>
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  mobileMenuButton.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+</script>
+
+  <script>
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A') {
+      mobileMenu.classList.add('hidden');
+    }
+  });
+</script>
+
+</body>
+</html>
