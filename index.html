@@ -165,5 +165,14 @@
   });
 </script>
 
+  <script>
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A') {
+      mobileMenu.classList.add('hidden');
+    }
+  });
+</script>
+
 </body>
 </html>
