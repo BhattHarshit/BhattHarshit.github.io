@@ -1,0 +1,16 @@
+<nav id="nav-menu" class="hidden md:flex items-center space-x-6 text-lg">
+  {{ range site.Menus.main }}
+    <a href="{{ .URL | relURL }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">{{ .Name }}</a>
+  {{ end }}
+  <label for="theme-toggle" class="ml-4 relative inline-flex items-center cursor-pointer">
+    <input type="checkbox" id="theme-toggle" class="sr-only" />
+    <div class="w-11 h-6 bg-gray-300 rounded-full transition-all duration-300" id="toggle-background"></div>
+    <span class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300" id="toggle-button"></span>
+  </label>
+</nav>
+
+<div id="mobile-menu" class="hidden md:hidden absolute top-16 left-0 w-full bg-white dark:bg-gray-900 shadow-md py-4">
+  {{ range site.Menus.main }}
+    <a href="{{ .URL | relURL }}" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">{{ .Name }}</a>
+  {{ end }}
+</div>
