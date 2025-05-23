@@ -100,31 +100,21 @@
         toggleButton.style.transform = '';
       }
     });
-  </script>
-  <script>
-    // Add this script to toggle the mobile menu
+
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
 
     mobileMenuButton.addEventListener('click', () => {
       mobileMenu.classList.toggle('hidden');
     });
+
+    mobileMenu.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') {
+        mobileMenu.classList.add('hidden');
+      }
+    });
+
+    document.getElementById("year").textContent = new Date().getFullYear();
   </script>
-
-  <script>
-  const mobileMenuButton = document.getElementById('mobile-menu-button');
-  const mobileMenu = document.getElementById('mobile-menu');
-
-  mobileMenuButton.addEventListener('click', () => {
-    mobileMenu.classList.toggle('hidden');
-  });
-
-  // Add this event listener to close the menu when a link is clicked
-  mobileMenu.addEventListener('click', (e) => {
-    if (e.target.tagName === 'A') {
-      mobileMenu.classList.add('hidden');
-    }
-  });
-</script>
 </body>
 </html>
