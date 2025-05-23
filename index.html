@@ -119,38 +119,39 @@
     &copy; 2025 Harshit Bhatt. All rights reserved.
   </footer>
 
-  
   <script>
-    const toggleSwitch = document.getElementById('theme-toggle');
-   const body = document.body;
-   const toggleBackground = document.getElementById('toggle-background');
-   const toggleButton = document.getElementById('toggle-button');
+  const toggleSwitch = document.getElementById('theme-toggle');
+  const toggleBackground = document.getElementById('toggle-background');
+  const toggleButton = document.getElementById('toggle-button');
 
-   
-   if (localStorage.theme === 'dark' || (!localStorage.theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-     toggleSwitch.checked = true;
-     toggleBackground.classList.add('bg-indigo-500');
-     toggleButton.style.transform = 'translateX(20px)';
-     body.classList.add('dark');
-     } else {
-     toggleBackground.classList.remove('bg-indigo-500');
-     toggleButton.style.transform = '';
-     body.classList.remove('dark');
-     }
+  const root = document.documentElement;
 
-   toggleSwitch.addEventListener('change', () => {
-     if (toggleSwitch.checked) {
-       body.classList.add('dark');
-       localStorage.setItem('theme', 'dark');
-       toggleBackground.classList.add('bg-indigo-500');
-       toggleButton.style.transform = 'translateX(20px)';
-     } else {
-       body.classList.remove('dark');
-       localStorage.setItem('theme', 'light');
-       toggleBackground.classList.remove('bg-indigo-500');
-       toggleButton.style.transform = '';
-     }
-   });
-  </script>
+  if (localStorage.theme === 'dark' || (!localStorage.theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    toggleSwitch.checked = true;
+    toggleBackground.classList.add('bg-indigo-500');
+    toggleButton.style.transform = 'translateX(20px)';
+    root.classList.add('dark');
+  } else {
+    toggleBackground.classList.remove('bg-indigo-500');
+    toggleButton.style.transform = '';
+    root.classList.remove('dark');
+  }
+
+  toggleSwitch.addEventListener('change', () => {
+    if (toggleSwitch.checked) {
+      root.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+      toggleBackground.classList.add('bg-indigo-500');
+      toggleButton.style.transform = 'translateX(20px)';
+    } else {
+      root.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+      toggleBackground.classList.remove('bg-indigo-500');
+      toggleButton.style.transform = '';
+    }
+  });
+</script>
+
+  
 </body>
 </html>
