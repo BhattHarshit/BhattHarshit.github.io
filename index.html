@@ -17,6 +17,7 @@
 
   
   <script>
+    // Theme initialization script, runs immediately
     (function() {
       const theme = localStorage.getItem('theme');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -59,7 +60,7 @@
         <a href="/news/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">News</a>
         <a href="/teaching/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Teaching</a>
         <a href="/explore/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Explore</a>
-        </div>
+      </div>
     </div>
   </header>
 
@@ -120,63 +121,81 @@
 </footer>
 
   <script>
-  const toggleSwitch = document.getElementById('theme-toggle');
-  const toggleBackground = document.getElementById('toggle-background');
-  const toggleButton = document.getElementById('toggle-button');
+  // Theme Toggle Script
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleSwitch = document.getElementById('theme-toggle');
+    const toggleBackground = document.getElementById('toggle-background');
+    const toggleButton = document.getElementById('toggle-button');
 
-  const root = document.documentElement;
+    const root = document.documentElement;
 
-  // Initialize theme based on localStorage or system preference
-  const currentTheme = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const setTheme = (isDark) => {
+      if (isDark) {
+        root.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+        toggleSwitch.checked = true;
+        toggleBackground.classList.add('bg-indigo-500');
+        toggleButton.style.transform = 'translateX(20px)';
+      } else {
+        root.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+        toggleSwitch.checked = false;
+        toggleBackground.classList.remove('bg-indigo-500');
+        toggleButton.style.transform = '';
+      }
+    };
 
-  const setTheme = (isDark) => {
-    if (isDark) {
-      root.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-      toggleSwitch.checked = true;
-      toggleBackground.classList.add('bg-indigo-500');
-      toggleButton.style.transform = 'translateX(20px)';
+    // Initialize theme based on localStorage or system preference
+    const currentTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setTheme(currentTheme === 'dark' || (!currentTheme && prefersDark));
+
+    // Event listener for desktop theme toggle
+    toggleSwitch.addEventListener('change', () => {
+      setTheme(toggleSwitch.checked);
+    });
+  });
+</script>
+
+  <script>
+  // Year update script, runs after DOM content is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById("year").textContent = new Date().getFullYear();
+  });
+</script>
+
+  <script>
+  // Mobile Menu Script, runs after DOM content is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    // Add a simple check to make sure elements exist before adding listeners
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        console.log('Mobile menu button clicked. Menu visibility:', mobileMenu.classList.contains('hidden') ? 'hidden' : 'visible');
+      });
+
+      // Close mobile menu when a link inside it is clicked
+      mobileMenu.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+          mobileMenu.classList.add('hidden');
+          console.log('Link clicked in mobile menu. Menu hidden.');
+        }
+      });
+
+      // Close mobile menu if the window is resized to desktop size
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint is typically 768px
+          if (!mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
+            console.log('Window resized to desktop, mobile menu hidden.');
+          }
+        }
+      });
     } else {
-      root.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-      toggleSwitch.checked = false;
-      toggleBackground.classList.remove('bg-indigo-500');
-      toggleButton.style.transform = '';
-    }
-  };
-
-  setTheme(currentTheme === 'dark' || (!currentTheme && prefersDark));
-
-  // Event listener for desktop theme toggle
-  toggleSwitch.addEventListener('change', () => {
-    setTheme(toggleSwitch.checked);
-  });
-</script>
-
-  <script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
-
-  <script>
-  const mobileMenuButton = document.getElementById('mobile-menu-button');
-  const mobileMenu = document.getElementById('mobile-menu');
-
-  mobileMenuButton.addEventListener('click', () => {
-    mobileMenu.classList.toggle('hidden');
-  });
-
-  // Close mobile menu when a link inside it is clicked
-  mobileMenu.addEventListener('click', (e) => {
-    if (e.target.tagName === 'A') {
-      mobileMenu.classList.add('hidden');
-    }
-  });
-
-  // This is crucial: if the window is resized to desktop, hide the mobile menu
-  window.addEventListener('resize', () => {
-    if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint is typically 768px
-      mobileMenu.classList.add('hidden');
+      console.error("Mobile menu button or mobile menu not found. Check HTML IDs.");
     }
   });
 </script>
