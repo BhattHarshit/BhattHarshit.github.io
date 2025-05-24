@@ -59,15 +59,7 @@
         <a href="/news/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">News</a>
         <a href="/teaching/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Teaching</a>
         <a href="/explore/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Explore</a>
-        <div class="py-2 px-6 flex items-center justify-between">
-          <span>Dark Mode</span>
-          <label for="mobile-theme-toggle" class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="mobile-theme-toggle" class="sr-only" />
-            <div class="w-11 h-6 bg-gray-300 rounded-full transition-all duration-300" id="mobile-toggle-background"></div>
-            <span class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300" id="mobile-toggle-button"></span>
-          </label>
         </div>
-      </div>
     </div>
   </header>
 
@@ -132,11 +124,6 @@
   const toggleBackground = document.getElementById('toggle-background');
   const toggleButton = document.getElementById('toggle-button');
 
-  // Mobile theme toggle elements
-  const mobileToggleSwitch = document.getElementById('mobile-theme-toggle');
-  const mobileToggleBackground = document.getElementById('mobile-toggle-background');
-  const mobileToggleButton = document.getElementById('mobile-toggle-button');
-
   const root = document.documentElement;
 
   // Initialize theme based on localStorage or system preference
@@ -150,22 +137,12 @@
       toggleSwitch.checked = true;
       toggleBackground.classList.add('bg-indigo-500');
       toggleButton.style.transform = 'translateX(20px)';
-      if (mobileToggleSwitch) { // Check if mobile elements exist
-        mobileToggleSwitch.checked = true;
-        mobileToggleBackground.classList.add('bg-indigo-500');
-        mobileToggleButton.style.transform = 'translateX(20px)';
-      }
     } else {
       root.classList.remove('dark');
       localStorage.setItem('theme', 'light');
       toggleSwitch.checked = false;
       toggleBackground.classList.remove('bg-indigo-500');
       toggleButton.style.transform = '';
-      if (mobileToggleSwitch) { // Check if mobile elements exist
-        mobileToggleSwitch.checked = false;
-        mobileToggleBackground.classList.remove('bg-indigo-500');
-        mobileToggleButton.style.transform = '';
-      }
     }
   };
 
@@ -175,13 +152,6 @@
   toggleSwitch.addEventListener('change', () => {
     setTheme(toggleSwitch.checked);
   });
-
-  // Event listener for mobile theme toggle
-  if (mobileToggleSwitch) {
-    mobileToggleSwitch.addEventListener('change', () => {
-      setTheme(mobileToggleSwitch.checked);
-    });
-  }
 </script>
 
   <script>
@@ -199,6 +169,13 @@
   // Close mobile menu when a link inside it is clicked
   mobileMenu.addEventListener('click', (e) => {
     if (e.target.tagName === 'A') {
+      mobileMenu.classList.add('hidden');
+    }
+  });
+
+  // This is crucial: if the window is resized to desktop, hide the mobile menu
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint is typically 768px
       mobileMenu.classList.add('hidden');
     }
   });
