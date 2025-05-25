@@ -1,7 +1,7 @@
 baseURL = "https://bhattharshit.github.io/" # Your GitHub Pages URL
 languageCode = "en-us"
 title = "Harshit Bhatt"
-theme = "" # Leave empty unless you install a specific Hugo theme
+ # theme = "" # Leave empty unless you install a specific Hugo theme
 
 [params]
   # You can add any global parameters here if you have them
