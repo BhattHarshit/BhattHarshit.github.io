@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HUGO_VERSION: '0.125.7' # Check Hugo's latest version (or specific version you use)
-      NODE_VERSION: '20'     # Use Node.js 20 for TailwindCSS build
+      # NODE_VERSION: '20'     # Node.js is not needed if TailwindCSS is pre-compiled and committed
     steps:
       - name: Checkout your Hugo source code
         uses: actions/checkout@v4
@@ -33,19 +33,22 @@ jobs:
           submodules: true # Fetch Hugo themes (if you use git submodules)
           fetch-depth: 0   # Fetch all history for auto-merge conflicts
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
+      # --- REMOVED / COMMENTED OUT NODE.JS AND NPM INSTALL STEPS ---
+      # If you pre-compile TailwindCSS and commit styles.css to static/css/,
+      # you do NOT need these steps in the GitHub Action.
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install dependencies (for TailwindCSS)
-        run: npm install # Adjust if you use yarn or pnpm, or remove if not using npm
+      # - name: Install dependencies (for TailwindCSS)
+      #   run: npm install # This command fails if no package.json is present
 
       - name: Set up Hugo
         uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: ${{ env.HUGO_VERSION }}
-          extended: true # Essential for TailwindCSS and PostCSS processing
+          extended: true # Essential for PostCSS processing (even if not used, doesn't hurt)
 
       - name: Build Hugo site
         run: hugo --minify --baseURL "https://BhattHarshit.github.io/" # IMPORTANT: Set your exact base URL here!
