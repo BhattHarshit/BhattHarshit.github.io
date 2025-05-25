@@ -1,0 +1,12 @@
+baseURL = "https://bhattharshit.github.io/" # Your GitHub Pages URL
+languageCode = "en-us"
+title = "Harshit Bhatt"
+theme = "" # Leave empty unless you install a specific Hugo theme
+
+[params]
+  # You can add any global parameters here if you have them
+
+# These are for taxonomies, even if you don't use them heavily, good to define
+[taxonomies]
+  category = "categories"
+  tag = "tags"

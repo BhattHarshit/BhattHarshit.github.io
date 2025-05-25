@@ -1,0 +1,14 @@
+# Hugo build output
+/public/
+/resources/_gen/
+/.hugo_build.lock
+
+# Node modules (if you use npm for Tailwind)
+/node_modules/
+
+# VS Code
+.vscode/
+
+# Other common OS files
+.DS_Store
+Thumbs.db

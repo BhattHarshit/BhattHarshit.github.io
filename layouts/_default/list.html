@@ -1,0 +1,15 @@
+{{ define "main" }}
+<h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100">{{ .Title }}</h1>
+<div class="content prose dark:prose-invert max-w-none">
+    {{ .Content }}
+</div>
+
+{{/* You can add logic here to list child pages if this is a section page */}}
+{{ range .Pages }}
+    <div class="mb-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
+        <h2 class="text-2xl font-semibold mb-2"><a href="{{ .Permalink }}" class="text-indigo-600 hover:underline dark:text-indigo-400">{{ .Title }}</a></h2>
+        <p class="text-gray-700 dark:text-gray-300">{{ .Summary | plainify | truncate 150 }}</p>
+        <a href="{{ .Permalink }}" class="text-indigo-600 hover:underline dark:text-indigo-400">Read more &rarr;</a>
+    </div>
+{{ end }}
+{{ end }}

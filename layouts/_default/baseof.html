@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ .Title }} | Harshit Bhatt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    /* CRITICAL: Hide the body initially to prevent ANY FOUC */
+    body {
+      visibility: hidden; /* Hide content entirely */
+      opacity: 0;        /* Also apply opacity for fade-in effect */
+      transition: opacity 0.3s ease-in-out; /* Smooth transition when unhiding */
+    }
+
+    /* Style for when the body is loaded and ready to be visible */
+    body.is-loaded {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <script>
+    (function() {
+      try {
+        const html = document.documentElement;
+        const theme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        const isDark = (theme === 'dark' || (!theme && prefersDark));
+
+        if (isDark) {
+          html.classList.add('dark');
+        } else {
+          html.classList.remove('dark');
+        }
+
+        // --- CRITICAL PART FOR TOGGLE INITIAL VISUAL STATE ---
+        // Dynamically create a style tag to apply initial non-transitioned styles
+        const style = document.createElement('style');
+        style.innerHTML = `
+          /* Apply initial state directly and disable transitions on load */
+          #toggle-button {
+            transform: ${isDark ? 'translateX(20px)' : 'translateX(0px)'} !important;
+            transition: none !important;
+          }
+          #toggle-background {
+            background-color: ${isDark ? '#4f46e5' : '#d1d5db'} !important; /* indigo-600 or gray-300 */
+            transition: none !important;
+          }
+        `;
+        document.head.appendChild(style);
+
+        // Also, synchronously set the checkbox state for the SR-only input
+        const toggleInput = document.getElementById('theme-toggle');
+        if (toggleInput) {
+            toggleInput.checked = isDark;
+        }
+
+        // After a very short delay (or next animation frame), remove the temporary style block
+        // This re-enables the Tailwind transition classes for user interaction.
+        setTimeout(() => {
+          if (style && style.parentNode) {
+            style.parentNode.removeChild(style);
+          }
+        }, 50); // Small delay to ensure initial render before transitions are enabled.
+
+        // --- NEW CRITICAL PART FOR HIDING/UNHIDING BODY ---
+        // Use requestAnimationFrame to ensure the body is unhidden after browser has painted
+        // the initial state without flickering.
+        requestAnimationFrame(() => {
+          document.body.classList.add('is-loaded');
+        });
+        
+      } catch (e) {
+        console.error("Early theme script failed:", e);
+      }
+    })();
+  </script>
+</head>
+
+<body class="bg-gradient-to-br from-gray-50 via-white to-gray-200 text-gray-900 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-black dark:text-gray-100 font-sans min-h-screen flex flex-col">
+  <div class="hidden dark:bg-black dark:text-white dark:border-gray-700 dark:hover:text-indigo-400"></div>
+
+  <header class="bg-white dark:bg-gray-900 bg-opacity-90 dark:bg-opacity-80 backdrop-blur-md sticky top-0 z-50 shadow-md">
+    <div class="container mx-auto flex justify-between items-center py-4 px-6">
+        <h1 class="text-3xl font-bold tracking-wide">
+            <a href="/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+              {{ if .IsHome }}Home{{ else }}Harshit Bhatt{{ end }}
+            </a>
+        </h1>
+
+      <button id="mobile-menu-button" class="md:hidden flex justify-center w-8 h-8 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
+      <nav id="nav-menu" class="hidden md:flex items-center space-x-6 text-lg">
+        <a href="/research/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">Research</a>
+        <a href="/news/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">News</a>
+        <a href="/teaching/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">Teaching</a>
+        <a href="/explore/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">Explore</a>
+        <label for="theme-toggle" class="ml-4 relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="theme-toggle" class="sr-only" />
+          <div class="w-11 h-6 bg-gray-300 rounded-full transition-all duration-300" id="toggle-background"></div>
+          <span class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300" id="toggle-button"></span>
+        </label>
+      </nav>
+
+      <div id="mobile-menu" class="hidden md:hidden absolute top-16 left-0 w-full bg-white dark:bg-gray-900 shadow-md py-4">
+        <a href="/research/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Research</a>
+        <a href="/news/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">News</a>
+        <a href="/teaching/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Teaching</a>
+        <a href="/explore/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Explore</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow container mx-auto px-6 py-12 max-w-5xl text-gray-900 dark:text-gray-100">
+    {{ block "main" . }}{{ end }}
+  </main>
+
+  <footer class="bg-white dark:bg-gray-900 bg-opacity-90 dark:bg-opacity-80 backdrop-blur-md text-center text-gray-500 dark:text-gray-400 py-6 mt-12 border-t border-gray-200 dark:border-gray-700">
+    &copy; <span id="year"></span> Harshit Bhatt. All rights reserved.
+  </footer>
+
+  <script>
+    // Theme Toggle Script (for user interaction and re-initialization after DOMContentLoaded)
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleSwitch = document.getElementById('theme-toggle');
+      const toggleBackground = document.getElementById('toggle-background');
+      const toggleButton = document.getElementById('toggle-button');
+
+      const root = document.documentElement;
+
+      const setTheme = (isDark) => {
+        if (isDark) {
+          root.classList.add('dark');
+          localStorage.setItem('theme', 'dark');
+          // Explicitly set toggle visual state for user clicks
+          if (toggleSwitch) toggleSwitch.checked = true;
+          if (toggleBackground) {
+            toggleBackground.classList.add('bg-indigo-500');
+            toggleBackground.classList.remove('bg-gray-300'); // Ensure light mode default is removed
+          }
+          if (toggleButton) toggleButton.style.transform = 'translateX(20px)';
+        } else {
+          root.classList.remove('dark');
+          localStorage.setItem('theme', 'light');
+          // Explicitly set toggle visual state for user clicks
+          if (toggleSwitch) toggleSwitch.checked = false;
+          if (toggleBackground) {
+            toggleBackground.classList.remove('bg-indigo-500');
+            toggleBackground.classList.add('bg-gray-300'); // Ensure light mode default is added
+          }
+          if (toggleButton) toggleButton.style.transform = '';
+        }
+      };
+
+      // Call setTheme once on DOMContentLoaded to ensure the toggle's visual state
+      // is correctly synchronized after the early script's temporary styles are removed.
+      // This call will trigger the animations if a change is needed after the initial load.
+      const currentTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(currentTheme === 'dark' || (!currentTheme && prefersDark));
+
+      // Event listener for desktop theme toggle
+      if (toggleSwitch) { // Check if toggleSwitch exists
+        toggleSwitch.addEventListener('change', () => {
+          setTheme(toggleSwitch.checked); 
+        });
+      }
+    });
+  </script>
+
+  <script>
+    // Year update script, runs after DOM content is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      const yearElement = document.getElementById("year");
+      if (yearElement) { // Added check for element existence
+        yearElement.textContent = new Date().getFullYear();
+      }
+    });
+  </script>
+
+  <script>
+    // Mobile Menu Script, runs after DOM content is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      if (mobileMenuButton && mobileMenu) { // Add checks for element existence
+        mobileMenuButton.addEventListener('click', () => {
+          mobileMenu.classList.toggle('hidden');
+          console.log('Mobile menu button clicked. Menu visibility:', mobileMenu.classList.contains('hidden') ? 'hidden' : 'visible');
+        });
+
+        mobileMenu.addEventListener('click', (e) => {
+          if (e.target.tagName === 'A') {
+            mobileMenu.classList.add('hidden');
+            console.log('Link clicked in mobile menu. Menu hidden.');
+          }
+        });
+
+        window.addEventListener('resize', () => {
+          if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint is typically 768px
+            if (!mobileMenu.classList.contains('hidden')) {
+              mobileMenu.classList.add('hidden');
+              console.log('Window resized to desktop, mobile menu hidden.');
+            }
+          }
+        });
+      } else {
+        console.error("Mobile menu button or mobile menu not found. Check HTML IDs.");
+      }
+    });
+  </script>
+
+</body>
+</html>
