@@ -2,6 +2,7 @@
 <html lang="en" class="scroll-smooth">
 <head>
   <script>
+    // Early theme script to prevent flicker
     (function() {
       try {
         const html = document.documentElement;
@@ -15,36 +16,6 @@
         } else {
           html.classList.remove('dark');
         }
-
-        // --- CRITICAL PART FOR TOGGLE INITIAL VISUAL STATE ---
-        // Dynamically create a style tag to apply initial non-transitioned styles
-        const style = document.createElement('style');
-        style.innerHTML = `
-          /* Apply initial state directly and disable transitions on load */
-          #toggle-button {
-            transform: ${isDark ? 'translateX(20px)' : 'translateX(0px)'} !important;
-            transition: none !important;
-          }
-          #toggle-background {
-            background-color: ${isDark ? '#6366f1' : '#d1d5db'} !important; /* indigo-500 or gray-300 */
-            transition: none !important;
-          }
-        `;
-        document.head.appendChild(style);
-
-        // Also, synchronously set the checkbox state for the SR-only input
-        const toggleInput = document.getElementById('theme-toggle');
-        if (toggleInput) {
-            toggleInput.checked = isDark;
-        }
-
-        // After a very short delay (or next animation frame), remove the temporary style block
-        // This re-enables the Tailwind transition classes for user interaction.
-        setTimeout(() => {
-          if (style && style.parentNode) {
-            style.parentNode.removeChild(style);
-          }
-        }, 50); // Small delay to ensure initial render before transitions are enabled.
 
         // --- NEW CRITICAL PART FOR HIDING/UNHIDING BODY ---
         // Use requestAnimationFrame to ensure the body is unhidden after browser has painted
@@ -82,30 +53,42 @@
             </a>
         </h1>
 
-      <button id="mobile-menu-button" class="md:hidden flex justify-center w-8 h-8 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
+        {{/* Mobile-only controls: Theme Toggle and Hamburger Menu */}}
+        <div class="flex items-center md:hidden">
+            <button id="theme-toggle-icon-mobile" class="text-2xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400" aria-label="Toggle dark mode">
+                <i class="far fa-moon text-indigo-600 dark:text-indigo-400"></i> {{/* Default: Moon icon in light mode, now themed */}}
+            </button>
+            <button id="mobile-menu-button" class="ml-4 flex justify-center items-center w-8 h-8">
+                {{/* Hamburger Icon */}}
+                <svg id="hamburger-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                {{/* Cross Icon (initially hidden) */}}
+                <svg id="cross-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
 
-      <nav id="nav-menu" class="hidden md:flex items-center space-x-6 text-lg">
-        <a href="/research/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">Research</a>
-        <a href="/news/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">News</a>
-        <a href="/teaching/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">Teaching</a>
-        <a href="/explore/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">Explore</a>
-        <label for="theme-toggle" class="ml-4 relative inline-flex items-center cursor-pointer">
-          <input type="checkbox" id="theme-toggle" class="sr-only" />
-          <div class="w-11 h-6 bg-gray-300 rounded-full transition-all duration-300" id="toggle-background"></div>
-          <span class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300" id="toggle-button"></span>
-        </label>
-      </nav>
+        {{/* Desktop Navigation */}}
+        <nav id="nav-menu" class="hidden md:flex items-center space-x-6 text-lg">
+            <a href="/research/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">Research</a>
+            <a href="/news/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">News</a>
+            <a href="/teaching/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">Teaching</a>
+            <a href="/explore/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">Explore</a>
+            {{/* Desktop Theme Toggle Icon */}}
+            <button id="theme-toggle-icon-desktop" class="text-2xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400" aria-label="Toggle dark mode">
+                <i class="far fa-moon text-indigo-600 dark:text-indigo-400"></i> {{/* Default: Moon icon in light mode, now themed */}}
+            </button>
+        </nav>
 
-      <div id="mobile-menu" class="hidden md:hidden absolute top-16 left-0 w-full bg-white dark:bg-gray-900 shadow-md py-4">
-        <a href="/research/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Research</a>
-        <a href="/news/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">News</a>
-        <a href="/teaching/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Teaching</a>
-        <a href="/explore/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Explore</a>
-      </div>
+        {{/* Mobile Menu Content (initially hidden) */}}
+        <div id="mobile-menu" class="hidden md:hidden absolute top-16 left-0 w-full bg-white dark:bg-gray-900 shadow-md py-4">
+            <a href="/research/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Research</a>
+            <a href="/news/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">News</a>
+            <a href="/teaching/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Teaching</a>
+            <a href="/explore/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Explore</a>
+        </div>
     </div>
   </header>
 
@@ -120,91 +103,108 @@
   <script>
     // Theme Toggle Script (for user interaction and re-initialization after DOMContentLoaded)
     document.addEventListener('DOMContentLoaded', () => {
-      const toggleSwitch = document.getElementById('theme-toggle');
-      const toggleBackground = document.getElementById('toggle-background');
-      const toggleButton = document.getElementById('toggle-button');
+      const htmlElement = document.documentElement;
+      const mobileIconBtn = document.getElementById('theme-toggle-icon-mobile');
+      const desktopIconBtn = document.getElementById('theme-toggle-icon-desktop');
 
-      const root = document.documentElement;
+      // Helper function to update the icon's appearance based on the current theme state
+      const updateIconAppearance = (isDark) => {
+        const icons = [
+          mobileIconBtn ? mobileIconBtn.querySelector('i') : null,
+          desktopIconBtn ? desktopIconBtn.querySelector('i') : null
+        ].filter(Boolean); // Filter out nulls to only process existing elements
+
+        icons.forEach(icon => {
+          if (isDark) {
+            // If currently in dark mode, show 'sun' icon (far fa-sun) to suggest switching to light
+            icon.classList.remove('fa-moon', 'fas'); // Remove moon and solid style
+            icon.classList.add('fa-sun', 'far');     // Add sun and regular (outline) style
+          } else {
+            // If currently in light mode, show 'moon' icon (far fa-moon) to suggest switching to dark
+            icon.classList.remove('fa-sun', 'fas');  // Remove sun and solid style
+            icon.classList.add('fa-moon', 'far');    // Add moon and regular (outline) style
+          }
+        });
+      };
 
       const setTheme = (isDark) => {
         if (isDark) {
-          root.classList.add('dark');
+          htmlElement.classList.add('dark');
           localStorage.setItem('theme', 'dark');
-          // Explicitly set toggle visual state for user clicks
-          if (toggleSwitch) toggleSwitch.checked = true;
-          if (toggleBackground) {
-            toggleBackground.classList.add('bg-indigo-500');
-            toggleBackground.classList.remove('bg-gray-300'); // Ensure light mode default is removed
-          }
-          if (toggleButton) toggleButton.style.transform = 'translateX(20px)';
         } else {
-          root.classList.remove('dark');
+          htmlElement.classList.remove('dark');
           localStorage.setItem('theme', 'light');
-          // Explicitly set toggle visual state for user clicks
-          if (toggleSwitch) toggleSwitch.checked = false;
-          if (toggleBackground) {
-            toggleBackground.classList.remove('bg-indigo-500');
-            toggleBackground.classList.add('bg-gray-300'); // Ensure light mode default is added
-          }
-          if (toggleButton) toggleButton.style.transform = '';
         }
+        updateIconAppearance(isDark); // Update icon immediately after setting theme
       };
 
-      // Call setTheme once on DOMContentLoaded to ensure the toggle's visual state
-      // is correctly synchronized after the early script's temporary styles are removed.
-      // This call will trigger the animations if a change is needed after the initial load.
+      // Initial theme setup on DOMContentLoaded
       const currentTheme = localStorage.getItem('theme');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setTheme(currentTheme === 'dark' || (!currentTheme && prefersDark));
 
-      // Event listener for desktop theme toggle
-      if (toggleSwitch) { // Check if toggleSwitch exists
-        toggleSwitch.addEventListener('change', () => {
-          setTheme(toggleSwitch.checked); 
+      // Event listeners for user clicks
+      if (mobileIconBtn) {
+        mobileIconBtn.addEventListener('click', () => {
+          // Toggle the dark mode state based on current html class
+          setTheme(!htmlElement.classList.contains('dark'));
+        });
+      }
+      if (desktopIconBtn) {
+        desktopIconBtn.addEventListener('click', () => {
+          // Toggle the dark mode state based on current html class
+          setTheme(!htmlElement.classList.contains('dark'));
         });
       }
     });
   </script>
-
-  <!-- <script>
-    // Year update script, runs after DOM content is loaded
-    document.addEventListener('DOMContentLoaded', () => {
-      const yearElement = document.getElementById("year");
-      if (yearElement) { // Added check for element existence
-        yearElement.textContent = new Date().getFullYear();
-      }
-    });
-  </script> -->
 
   <script>
     // Mobile Menu Script, runs after DOM content is loaded
     document.addEventListener('DOMContentLoaded', () => {
       const mobileMenuButton = document.getElementById('mobile-menu-button');
       const mobileMenu = document.getElementById('mobile-menu');
+      const hamburgerIcon = document.getElementById('hamburger-icon');
+      const crossIcon = document.getElementById('cross-icon');
 
-      if (mobileMenuButton && mobileMenu) { // Add checks for element existence
+
+      if (mobileMenuButton && mobileMenu && hamburgerIcon && crossIcon) { // Add checks for element existence
         mobileMenuButton.addEventListener('click', () => {
           mobileMenu.classList.toggle('hidden');
+          
+          // Toggle icon visibility
+          hamburgerIcon.classList.toggle('hidden');
+          crossIcon.classList.toggle('hidden');
+
           console.log('Mobile menu button clicked. Menu visibility:', mobileMenu.classList.contains('hidden') ? 'hidden' : 'visible');
         });
+
 
         mobileMenu.addEventListener('click', (e) => {
           if (e.target.tagName === 'A') {
             mobileMenu.classList.add('hidden');
+            // Ensure icons revert to hamburger when menu closes by clicking a link
+            hamburgerIcon.classList.remove('hidden');
+            crossIcon.classList.add('hidden');
             console.log('Link clicked in mobile menu. Menu hidden.');
           }
         });
+
 
         window.addEventListener('resize', () => {
           if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint is typically 768px
             if (!mobileMenu.classList.contains('hidden')) {
               mobileMenu.classList.add('hidden');
+              // Ensure icons revert to hamburger when menu closes due to resize
+              hamburgerIcon.classList.remove('hidden');
+              crossIcon.classList.add('hidden');
               console.log('Window resized to desktop, mobile menu hidden.');
             }
           }
         });
+
       } else {
-        console.error("Mobile menu button or mobile menu not found. Check HTML IDs.");
+        console.error("Mobile menu button, menu, or icons not found. Check HTML IDs.");
       }
     });
   </script>

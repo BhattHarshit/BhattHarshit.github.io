@@ -1,0 +1,59 @@
+{{ define "main" }}
+<section class="max-w-5xl mx-auto px-6 py-12">
+
+  <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-6">{{ .Title }}</h1>
+
+  {{ if .Content }}
+    <div class="prose dark:prose-invert max-w-none mb-8 text-lg text-gray-700 dark:text-gray-300">
+      {{ .Content }}
+    </div>
+  {{ end }}
+
+  {{ if .Pages }}
+    <div class="space-y-8">
+      {{ range .Pages.ByWeight }}
+        {{ $newsItem := . }}
+        {{ $image := $newsItem.Resources.GetMatch ($newsItem.Params.image) }}
+
+        <article class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row transform hover:scale-105 transition duration-300 ease-in-out">
+          {{ if $image }}
+            <div class="md:w-1/3 w-full h-48 md:h-auto overflow-hidden flex-shrink-0">
+              <img class="w-full h-full object-cover" src="{{ $image.RelPermalink }}" alt="{{ $newsItem.Title }}">
+            </div>
+          {{ else }}
+            <div class="md:w-1/3 w-full h-48 md:h-auto bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 flex-shrink-0">
+              No Image
+            </div>
+          {{ end }}
+
+          <div class="p-6 flex-grow flex flex-col md:w-2/3">
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">{{ $newsItem.Date.Format "January 2, 2006" }}</p>
+            <h2 class="text-2xl font-semibold mb-3">
+              <a href="{{ $newsItem.Permalink }}" class="text-indigo-600 hover:underline dark:text-indigo-400">
+                {{ $newsItem.Title }}
+              </a>
+            </h2>
+
+            <div class="text-gray-700 dark:text-gray-300 text-base mb-4 flex-grow line-clamp-3">
+              {{ if $newsItem.Summary }}
+                {{ $newsItem.Summary | safeHTML }}
+              {{ else }}
+                {{ $newsItem.Content | plainify | truncate 200 "..." | safeHTML }}
+              {{ end }}
+            </div>
+
+            <div class="mt-auto">
+              <a href="{{ $newsItem.Permalink }}" class="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+                Read more →
+              </a>
+            </div>
+          </div>
+        </article>
+      {{ end }}
+    </div>
+  {{ else }}
+    <p class="text-gray-500 dark:text-gray-400">No news items available at this time.</p>
+  {{ end }}
+
+</section>
+{{ end }}

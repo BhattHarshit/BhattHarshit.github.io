@@ -1,0 +1,54 @@
+{{ define "main" }}
+<section class="max-w-5xl mx-auto px-6 py-12">
+
+  <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-6">{{ .Title }}</h1>
+
+  {{ if .Content }}
+    <div class="prose dark:prose-invert max-w-none mb-8 text-lg text-gray-700 dark:text-gray-300">
+      {{ .Content }}
+    </div>
+  {{ end }}
+
+  {{ if .Pages }}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {{ range .Pages.ByWeight }}
+        {{ $newsItem := . }}
+        {{ $image := $newsItem.Resources.GetMatch ($newsItem.Params.image) }}
+
+        <article class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-105 transition duration-300 ease-in-out flex flex-col">
+          {{ if $image }}
+            <img class="w-full h-48 object-cover" src="{{ $image.RelPermalink }}" alt="{{ $newsItem.Title }}">
+          {{ else }}
+            <div class="w-full h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">No Image</div>
+          {{ end }}
+
+          <div class="p-6 flex-grow flex flex-col">
+            <h2 class="text-xl font-semibold mb-2">
+              <a href="{{ $newsItem.Permalink }}" class="text-indigo-600 hover:underline dark:text-indigo-400">
+                {{ $newsItem.Title }}
+              </a>
+            </h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">{{ $newsItem.Date.Format "January 2, 2006" }}</p>
+
+            <div class="text-gray-700 dark:text-gray-300 text-base mb-4 line-clamp-3">
+              {{ if $newsItem.Summary }}
+                {{ $newsItem.Summary | safeHTML }}
+              {{ else }}
+                {{ $newsItem.Content | plainify | truncate 150 "..." | safeHTML }}
+              {{ end }}
+            </div>
+
+            <div class="mt-auto"> <a href="{{ $newsItem.Permalink }}" class="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+                Read more →
+              </a>
+            </div>
+          </div>
+        </article>
+      {{ end }}
+    </div>
+  {{ else }}
+    <p class="text-gray-500 dark:text-gray-400">No news items available at this time.</p>
+  {{ end }}
+
+</section>
+{{ end }}
