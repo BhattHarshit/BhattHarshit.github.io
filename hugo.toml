@@ -10,3 +10,12 @@ title = "Harshit Bhatt"
 [taxonomies]
   category = "categories"
   tag = "tags"
+
+  [markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      # This setting allows raw HTML to be rendered in Markdown files.
+      unsafe = true
+
+
+  
