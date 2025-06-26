@@ -1,31 +1,32 @@
 ---
-title: "Talks & Conferences"
+title: "Conferences & Workshops"
 date: 2025-05-21T00:00:00Z
 weight: 2
 draft: false
 ---
 
-A list will be available soon!
-<!--more-->
-
-<!-- Below is a list of academic talks and conference presentations:
-
 ### 2025
 
-- **Low-Rank Hessians for Inverse Problems**  
-  _Triangle Computational and Applied Mathematics Symposium (TriCAMS)_  
-  NC State University, March 2025  
-  [Slides (PDF)](/files/lowrank-hessian-tricams2025.pdf)
+- **[Graduate Student Mathematical Modeling Camp (GSMMC)](https://www.siam.org/conferences-events/workshops/2025-graduate-student-mathematical-modeling-camp/)**  
+  Hosted at Cal Poly Pomona, June 4–7, 2025
 
-- **Sparse Discrete Empirical Interpolation for Sensor Placement**  
-  _TAGMaC Conference_, February 2025  
-  NC State University
+<!--more-->
 
----
+- **[Mathematical Problems in Industry Workshop (MPI)](https://www.siam.org/conferences-events/workshops/2025-mathematical-problems-in-industry-workshop/)**  
+  Held at the Claremont Colleges, June 9–13, 2025
+
+- **[Perspectives in Modern Mathematics: The Fifth Duke Mathematical Journal Conference](https://sites.duke.edu/dmj2025/)**  
+  Duke University — *April 25–27, 2025*
+
+- **[Triangle Area Graduate Mathematics Conference (TAGMaC)](https://sites.duke.edu/tagmac/)**  
+  Duke University — *February 2025*
 
 ### 2024
 
-- **Scientific Machine Learning in PDE-Constrained Inverse Problems**  
-  _Applied Mathematics Seminar_, October 2024  
-  NC State University  
-  [Event Page](https://math.ncsu.edu/seminars/) -->
+- **[Triangle Computational and Applied Mathematics Symposium (TriCAMS)](https://math.unc.edu/tricams/)**  
+ UNC Chapel Hill — *October 2024*
+
+### 2023
+
+- **[Triangle Computational and Applied Mathematics Symposium (TriCAMS)](https://sites.math.duke.edu/~jonm/Tricams/)**  
+  Duke University — *November 2023*

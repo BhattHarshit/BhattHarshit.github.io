@@ -10,53 +10,21 @@
   {{ end }}
 
   {{ if .Pages }}
-    <div class="space-y-8">
-      {{ range .Pages.ByWeight }}
+    <ul class="list-disc list-inside space-y-2 text-gray-800 dark:text-gray-200">
+      {{ range .Pages.ByDate.Reverse }}
         {{ $course := . }}
-        <article class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition duration-300 ease-in-out">
-          <h2 class="text-2xl font-semibold mb-3">
-            <a href="{{ $course.Permalink }}" class="text-indigo-600 hover:underline dark:text-indigo-400">
-              {{ $course.Title }}
-            </a>
-          </h2>
-
-          <div class="text-gray-600 dark:text-gray-400 text-sm mb-4">
-            {{ if $course.Params.course_code }}
-              <span class="mr-4"><i class="fas fa-book-open mr-1"></i> Course Code: <span class="font-medium">{{ $course.Params.course_code }}</span></span>
+        <li>
+          <a href="{{ $course.Permalink }}" class="text-indigo-600 dark:text-indigo-400 hover:underline">
+            {{ $course.Title }}
+            {{ with $course.Params.semester }}
+              ({{ . }}{{ with $course.Params.role }}, {{ . }}{{ end }})
             {{ end }}
-            {{ if $course.Params.semester }}
-              <span class="mr-4"><i class="fas fa-calendar-alt mr-1"></i> Semester: <span class="font-medium">{{ $course.Params.semester }}</span></span>
-            {{ end }}
-            {{ if $course.Params.instructor }}
-              <span><i class="fas fa-user-tie mr-1"></i> Instructor: <span class="font-medium">{{ $course.Params.instructor }}</span></span>
-            {{ end }}
-          </div>
-
-          {{ if or $course.Summary $course.Content }}
-          <div class="text-gray-700 dark:text-gray-300 text-base mb-4 prose dark:prose-invert max-w-none">
-            {{ if $course.Summary }}
-              {{ $course.Summary | safeHTML }}
-            {{ else }}
-              {{ $course.Content | plainify | truncate 250 "..." | safeHTML }}
-            {{ end }}
-          </div>
-          {{ end }}
-
-          <div class="mt-4">
-            <a href="{{ $course.Permalink }}" class="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
-              View Course Details →
-            </a>
-            {{ if $course.Params.syllabus_link }}
-            <a href="{{ $course.Params.syllabus_link }}" target="_blank" rel="noopener" class="ml-4 inline-flex items-center text-green-600 dark:text-green-400 hover:underline font-medium">
-              <i class="fas fa-file-pdf mr-2"></i> Syllabus
-            </a>
-            {{ end }}
-          </div>
-        </article>
+          </a>
+        </li>
       {{ end }}
-    </div>
+    </ul>
   {{ else }}
-    <p class="text-gray-500 dark:text-gray-400">No courses available at this time.</p>
+    <p class="text-gray-500 dark:text-gray-400">No courses listed at this time.</p>
   {{ end }}
 
 </section>
