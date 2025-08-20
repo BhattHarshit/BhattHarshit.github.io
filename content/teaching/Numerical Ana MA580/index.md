@@ -3,6 +3,7 @@ title: "MA 580 (601) — Numerical Analysis I"
 semester: "Spring 2025"
 role: "Instructor"
 date: 2025-01-15
+endDate: 2025-05-03
 draft: false
 ---
 

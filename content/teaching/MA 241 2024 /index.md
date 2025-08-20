@@ -3,6 +3,7 @@ title: "MA 241 — Calculus II"
 semester: "Summer 2024"
 role: "Teaching Assistant"
 date: 2024-05-13
+endDate: 2024-07-01
 draft: false
 ---
 

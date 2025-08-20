@@ -56,7 +56,7 @@
         {{/* Mobile-only controls: Theme Toggle and Hamburger Menu */}}
         <div class="flex items-center md:hidden">
             <button id="theme-toggle-icon-mobile" class="text-2xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400" aria-label="Toggle dark mode">
-                <i class="far fa-moon text-indigo-600 dark:text-indigo-400"></i> {{/* Default: Moon icon in light mode, now themed */}}
+                <i class="far fa-moon text-indigo-600 dark:text-indigo-400"></i>
             </button>
             <button id="mobile-menu-button" class="ml-4 flex justify-center items-center w-8 h-8">
                 {{/* Hamburger Icon */}}
@@ -71,23 +71,24 @@
         </div>
 
         {{/* Desktop Navigation */}}
+        {{ $sec := .Section }}
         <nav id="nav-menu" class="hidden md:flex items-center space-x-6 text-lg">
-            <a href="/research/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">Research</a>
-            <a href="/news/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">News</a>
-            <a href="/teaching/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">Teaching</a>
-            <a href="/explore/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium">Explore</a>
+            <a href="/research/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium {{ if eq $sec "research" }}text-indigo-600 dark:text-indigo-400 font-semibold text-xl{{ end }}" {{ if eq $sec "research" }}aria-current="page"{{ end }}>Research</a>
+            <a href="/news/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium {{ if eq $sec "news" }}text-indigo-600 dark:text-indigo-400 font-semibold text-xl{{ end }}" {{ if eq $sec "news" }}aria-current="page"{{ end }}>News</a>
+            <a href="/teaching/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium {{ if eq $sec "teaching" }}text-indigo-600 dark:text-indigo-400 font-semibold text-xl{{ end }}" {{ if eq $sec "teaching" }}aria-current="page"{{ end }}>Teaching</a>
+            <a href="/explore/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium {{ if eq $sec "explore" }}text-indigo-600 dark:text-indigo-400 font-semibold text-xl{{ end }}" {{ if eq $sec "explore" }}aria-current="page"{{ end }}>Explore</a>
             {{/* Desktop Theme Toggle Icon */}}
             <button id="theme-toggle-icon-desktop" class="text-2xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400" aria-label="Toggle dark mode">
-                <i class="far fa-moon text-indigo-600 dark:text-indigo-400"></i> {{/* Default: Moon icon in light mode, now themed */}}
+                <i class="far fa-moon text-indigo-600 dark:text-indigo-400"></i>
             </button>
         </nav>
 
         {{/* Mobile Menu Content (initially hidden) */}}
         <div id="mobile-menu" class="hidden md:hidden absolute top-16 left-0 w-full bg-white dark:bg-gray-900 shadow-md py-4">
-            <a href="/research/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Research</a>
-            <a href="/news/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">News</a>
-            <a href="/teaching/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Teaching</a>
-            <a href="/explore/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700">Explore</a>
+            <a href="/research/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700 {{ if eq $sec "research" }}text-indigo-600 dark:text-indigo-400 font-semibold{{ end }}" {{ if eq $sec "research" }}aria-current="page"{{ end }}>Research</a>
+            <a href="/news/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700 {{ if eq $sec "news" }}text-indigo-600 dark:text-indigo-400 font-semibold{{ end }}" {{ if eq $sec "news" }}aria-current="page"{{ end }}>News</a>
+            <a href="/teaching/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700 {{ if eq $sec "teaching" }}text-indigo-600 dark:text-indigo-400 font-semibold{{ end }}" {{ if eq $sec "teaching" }}aria-current="page"{{ end }}>Teaching</a>
+            <a href="/explore/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700 {{ if eq $sec "explore" }}text-indigo-600 dark:text-indigo-400 font-semibold{{ end }}" {{ if eq $sec "explore" }}aria-current="page"{{ end }}>Explore</a>
         </div>
     </div>
   </header>
@@ -116,13 +117,11 @@
 
         icons.forEach(icon => {
           if (isDark) {
-            // If currently in dark mode, show 'sun' icon (far fa-sun) to suggest switching to light
-            icon.classList.remove('fa-moon', 'fas'); // Remove moon and solid style
-            icon.classList.add('fa-sun', 'far');     // Add sun and regular (outline) style
+            icon.classList.remove('fa-moon', 'fas');
+            icon.classList.add('fa-sun', 'far');
           } else {
-            // If currently in light mode, show 'moon' icon (far fa-moon) to suggest switching to dark
-            icon.classList.remove('fa-sun', 'fas');  // Remove sun and solid style
-            icon.classList.add('fa-moon', 'far');    // Add moon and regular (outline) style
+            icon.classList.remove('fa-sun', 'fas');
+            icon.classList.add('fa-moon', 'far');
           }
         });
       };
@@ -135,24 +134,20 @@
           htmlElement.classList.remove('dark');
           localStorage.setItem('theme', 'light');
         }
-        updateIconAppearance(isDark); // Update icon immediately after setting theme
+        updateIconAppearance(isDark);
       };
 
-      // Initial theme setup on DOMContentLoaded
       const currentTheme = localStorage.getItem('theme');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setTheme(currentTheme === 'dark' || (!currentTheme && prefersDark));
 
-      // Event listeners for user clicks
       if (mobileIconBtn) {
         mobileIconBtn.addEventListener('click', () => {
-          // Toggle the dark mode state based on current html class
           setTheme(!htmlElement.classList.contains('dark'));
         });
       }
       if (desktopIconBtn) {
         desktopIconBtn.addEventListener('click', () => {
-          // Toggle the dark mode state based on current html class
           setTheme(!htmlElement.classList.contains('dark'));
         });
       }

@@ -3,6 +3,7 @@ title: "MA 114 — Introduction to Finite Mathematics with Applications"
 semester: "Spring 2024"
 role: "Lecture Assistant"
 date: 2024-01-15
+endDate: 2024-05-10
 draft: false
 ---
 
