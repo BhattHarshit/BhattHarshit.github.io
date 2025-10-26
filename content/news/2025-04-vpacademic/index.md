@@ -4,7 +4,7 @@ date: 2025-04-22
 image: "gsa.jpeg"
 summary: "Started to serve as the Vice Precident of Academic affairs of Graduate Student Association at NC State for 2025-2026 term"
 tags: ["academic", "leadership"]
-weight: 1
+# weight: 1
 draft: false
 ---
 

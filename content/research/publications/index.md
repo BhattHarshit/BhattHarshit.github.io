@@ -17,6 +17,13 @@ draft: false
   Md. Abid, Tayyaba A., *Harshit Bhatt*  
   _Vol. 3 No. 1 (2025): Spectrum of Engineering and Management Sciences._
 
+
+### Research Reports and Technical Contributions
+
+- *Matrix Sketching for Large-Scale Data*, SIAM Graduate Student Mathematical Modeling Camp (GSMMC), 2025.  
+  [View Report](https://www.siam.org/media/42tb0vd0/gsmmc2025_matrixskectching.pdf)
+
+
 <!-- ---
 
 ### Preprints

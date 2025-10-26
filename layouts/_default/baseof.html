@@ -2,207 +2,184 @@
 <html lang="en" class="scroll-smooth">
 <head>
   <script>
-    // Early theme script to prevent flicker
+    // THEME LOCK (Light-only) — Oct 25, 2025
+    // We deliberately force LIGHT theme to keep an academic look.
+    // All dark-mode detection is bypassed and localStorage is pinned to 'light'.
     (function() {
       try {
         const html = document.documentElement;
-        const theme = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        
-        const isDark = (theme === 'dark' || (!theme && prefersDark));
+        // Force light, ignore saved theme & system preference
+        html.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
 
-        if (isDark) {
-          html.classList.add('dark');
-        } else {
-          html.classList.remove('dark');
-        }
-
-        // --- NEW CRITICAL PART FOR HIDING/UNHIDING BODY ---
-        // Use requestAnimationFrame to ensure the body is unhidden after browser has painted
-        // the initial state without flickering.
+        // Keep the anti-flicker behavior
         requestAnimationFrame(() => {
           document.body.classList.add('is-loaded');
         });
-        
       } catch (e) {
         console.error("Early theme script failed:", e);
       }
     })();
   </script>
+  
+  <!-- Favicons (robust + cache-busted) -->
+  {{ $ver := "20251026" }} <!-- bump this when you change icons -->
+  <link rel="icon" type="image/svg+xml" href='{{ "favicon.svg" | relURL }}?v={{ $ver }}'>
+  <link rel="icon" type="image/png" sizes="32x32" href='{{ "favicon-32x32.png" | relURL }}?v={{ $ver }}'>
+  <link rel="icon" type="image/png" sizes="16x16" href='{{ "favicon-16x16.png" | relURL }}?v={{ $ver }}'>
+  <link rel="apple-touch-icon" href='{{ "apple-touch-icon.png" | relURL }}?v={{ $ver }}'>
+  <link rel="mask-icon" href='{{ "safari-pinned-tab.svg" | relURL }}?v={{ $ver }}' color="#4F46E5">
+  <link rel="shortcut icon" href='{{ "favicon.ico" | relURL }}?v={{ $ver }}'>
+
+  <!-- <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" type="image/png" href="/favicon.png">
+  <link rel="shortcut icon" href="/favicon.ico"> -->
+
+
   <meta charset="UTF-8" />
   <title>{{ .Title }} | Harshit Bhatt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/css/styles.css" />
-  
-  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
-
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
-  
 </head>
 
-<body class="bg-gradient-to-br from-gray-50 via-white to-gray-200 text-gray-900 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-black dark:text-gray-100 font-sans min-h-screen flex flex-col">
-  <div class="hidden dark:bg-black dark:text-white dark:border-gray-700 dark:hover:text-indigo-400"></div>
+<body class="bg-gradient-to-br from-gray-50 via-white to-gray-200 text-gray-900 font-sans min-h-screen flex flex-col">
+  <!-- Sentinel for Tailwind's dark variants left intentionally; harmless when 'dark' class is never applied -->
+  <!-- <div class="hidden dark:bg-black dark:text-white dark:border-gray-700 dark:hover:text-indigo-400"></div> -->
 
-  <header class="bg-white dark:bg-gray-900 bg-opacity-90 dark:bg-opacity-80 backdrop-blur-md sticky top-0 z-50 shadow-md">
+  <header class="bg-white bg-opacity-90 backdrop-blur-md sticky top-0 z-50 shadow-md">
     <div class="container mx-auto flex justify-between items-center py-4 px-6">
-        <h1 class="text-3xl font-bold tracking-wide">
-            <a href="/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">
-              {{ if .IsHome }}Home{{ else }}Harshit Bhatt{{ end }}
-            </a>
-        </h1>
+      <h1 class="text-3xl font-bold tracking-wide">
+        <a href="/" class="hover:text-indigo-600 transition">
+          {{ if .IsHome }}Home{{ else }}Harshit Bhatt{{ end }}
+        </a>
+      </h1>
 
-        {{/* Mobile-only controls: Theme Toggle and Hamburger Menu */}}
-        <div class="flex items-center md:hidden">
-            <button id="theme-toggle-icon-mobile" class="text-2xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400" aria-label="Toggle dark mode">
-                <i class="far fa-moon text-indigo-600 dark:text-indigo-400"></i>
-            </button>
-            <button id="mobile-menu-button" class="ml-4 flex justify-center items-center w-8 h-8">
-                {{/* Hamburger Icon */}}
-                <svg id="hamburger-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-                {{/* Cross Icon (initially hidden) */}}
-                <svg id="cross-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-        </div>
+      {{/* Mobile-only controls: Hamburger Menu (Theme toggle removed & commented) */}}
+      <div class="flex items-center md:hidden">
+        <!-- THEME TOGGLE (MOBILE) DISABLED: Keeping for future use
+        <button id="theme-toggle-icon-mobile" class="text-2xl p-2 rounded-full hover:bg-gray-200 transition flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-indigo-500" aria-label="Toggle dark mode">
+          <i class="far fa-moon text-indigo-600"></i>
+        </button>
+        -->
+        <button id="mobile-menu-button" class="ml-0 flex justify-center items-center w-8 h-8">
+          <!-- Hamburger Icon -->
+          <svg id="hamburger-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <!-- Cross Icon (initially hidden) -->
+          <svg id="cross-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
 
-        {{/* Desktop Navigation */}}
-        {{ $sec := .Section }}
-        <nav id="nav-menu" class="hidden md:flex items-center space-x-6 text-lg">
-            <a href="/research/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium {{ if eq $sec "research" }}text-indigo-600 dark:text-indigo-400 font-semibold text-xl{{ end }}" {{ if eq $sec "research" }}aria-current="page"{{ end }}>Research</a>
-            <a href="/news/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium {{ if eq $sec "news" }}text-indigo-600 dark:text-indigo-400 font-semibold text-xl{{ end }}" {{ if eq $sec "news" }}aria-current="page"{{ end }}>News</a>
-            <a href="/teaching/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium {{ if eq $sec "teaching" }}text-indigo-600 dark:text-indigo-400 font-semibold text-xl{{ end }}" {{ if eq $sec "teaching" }}aria-current="page"{{ end }}>Teaching</a>
-            <a href="/explore/" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition font-medium {{ if eq $sec "explore" }}text-indigo-600 dark:text-indigo-400 font-semibold text-xl{{ end }}" {{ if eq $sec "explore" }}aria-current="page"{{ end }}>Explore</a>
-            {{/* Desktop Theme Toggle Icon */}}
-            <button id="theme-toggle-icon-desktop" class="text-2xl p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400" aria-label="Toggle dark mode">
-                <i class="far fa-moon text-indigo-600 dark:text-indigo-400"></i>
-            </button>
-        </nav>
+      {{/* Desktop Navigation */}}
+      {{ $sec := .Section }}
+      <nav id="nav-menu" class="hidden md:flex items-center space-x-6 text-lg">
+        <a href="/research/" class="hover:text-indigo-600 transition font-medium {{ if eq $sec "research" }}text-indigo-600 font-semibold text-xl{{ end }}" {{ if eq $sec "research" }}aria-current="page"{{ end }}>Research</a>
+        <a href="/news/" class="hover:text-indigo-600 transition font-medium {{ if eq $sec "news" }}text-indigo-600 font-semibold text-xl{{ end }}" {{ if eq $sec "news" }}aria-current="page"{{ end }}>News</a>
+        <a href="/teaching/" class="hover:text-indigo-600 transition font-medium {{ if eq $sec "teaching" }}text-indigo-600 font-semibold text-xl{{ end }}" {{ if eq $sec "teaching" }}aria-current="page"{{ end }}>Teaching</a>
+        <a href="/explore/" class="hover:text-indigo-600 transition font-medium {{ if eq $sec "explore" }}text-indigo-600 font-semibold text-xl{{ end }}" {{ if eq $sec "explore" }}aria-current="page"{{ end }}>Explore</a>
 
-        {{/* Mobile Menu Content (initially hidden) */}}
-        <div id="mobile-menu" class="hidden md:hidden absolute top-16 left-0 w-full bg-white dark:bg-gray-900 shadow-md py-4">
-            <a href="/research/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700 {{ if eq $sec "research" }}text-indigo-600 dark:text-indigo-400 font-semibold{{ end }}" {{ if eq $sec "research" }}aria-current="page"{{ end }}>Research</a>
-            <a href="/news/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700 {{ if eq $sec "news" }}text-indigo-600 dark:text-indigo-400 font-semibold{{ end }}" {{ if eq $sec "news" }}aria-current="page"{{ end }}>News</a>
-            <a href="/teaching/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700 {{ if eq $sec "teaching" }}text-indigo-600 dark:text-indigo-400 font-semibold{{ end }}" {{ if eq $sec "teaching" }}aria-current="page"{{ end }}>Teaching</a>
-            <a href="/explore/" class="block py-2 px-6 hover:bg-gray-100 dark:hover:bg-gray-700 {{ if eq $sec "explore" }}text-indigo-600 dark:text-indigo-400 font-semibold{{ end }}" {{ if eq $sec "explore" }}aria-current="page"{{ end }}>Explore</a>
-        </div>
+        <!-- THEME TOGGLE (DESKTOP) DISABLED: Keeping for future use
+        <button id="theme-toggle-icon-desktop" class="text-2xl p-2 rounded-full hover:bg-gray-200 transition flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-indigo-500" aria-label="Toggle dark mode">
+          <i class="far fa-moon text-indigo-600"></i>
+        </button>
+        -->
+      </nav>
+
+      {{/* Mobile Menu Content (initially hidden) */}}
+      <div id="mobile-menu" class="hidden md:hidden absolute top-16 left-0 w-full bg-white shadow-md py-4">
+        <a href="/research/" class="block py-2 px-6 hover:bg-gray-100 {{ if eq $sec "research" }}text-indigo-600 font-semibold{{ end }}" {{ if eq $sec "research" }}aria-current="page"{{ end }}>Research</a>
+        <a href="/news/" class="block py-2 px-6 hover:bg-gray-100 {{ if eq $sec "news" }}text-indigo-600 font-semibold{{ end }}" {{ if eq $sec "news" }}aria-current="page"{{ end }}>News</a>
+        <a href="/teaching/" class="block py-2 px-6 hover:bg-gray-100 {{ if eq $sec "teaching" }}text-indigo-600 font-semibold{{ end }}" {{ if eq $sec "teaching" }}aria-current="page"{{ end }}>Teaching</a>
+        <a href="/explore/" class="block py-2 px-6 hover:bg-gray-100 {{ if eq $sec "explore" }}text-indigo-600 font-semibold{{ end }}" {{ if eq $sec "explore" }}aria-current="page"{{ end }}>Explore</a>
+      </div>
     </div>
   </header>
 
-  <main class="flex-grow container mx-auto px-6 py-12 max-w-5xl text-gray-900 dark:text-gray-100">
+  <main class="flex-grow container mx-auto px-2 py-10 max-w-5xl text-gray-900">
     {{ block "main" . }}{{ end }}
   </main>
 
-  <footer class="bg-white dark:bg-gray-900 bg-opacity-90 dark:bg-opacity-80 backdrop-blur-md text-center text-gray-500 dark:text-gray-400 py-6 mt-12 border-t border-gray-200 dark:border-gray-700">
+  <footer class="bg-white bg-opacity-90 backdrop-blur-md text-center text-gray-500 py-6 mt-12 border-t border-gray-200">
     &copy; {{ now.Year }} Harshit Bhatt. All rights reserved.
   </footer>
 
+  <!-- THEME TOGGLE SCRIPT DISABLED: Keeping code for future re-enable
   <script>
-    // Theme Toggle Script (for user interaction and re-initialization after DOMContentLoaded)
     document.addEventListener('DOMContentLoaded', () => {
       const htmlElement = document.documentElement;
       const mobileIconBtn = document.getElementById('theme-toggle-icon-mobile');
       const desktopIconBtn = document.getElementById('theme-toggle-icon-desktop');
 
-      // Helper function to update the icon's appearance based on the current theme state
       const updateIconAppearance = (isDark) => {
         const icons = [
           mobileIconBtn ? mobileIconBtn.querySelector('i') : null,
           desktopIconBtn ? desktopIconBtn.querySelector('i') : null
-        ].filter(Boolean); // Filter out nulls to only process existing elements
-
+        ].filter(Boolean);
         icons.forEach(icon => {
-          if (isDark) {
-            icon.classList.remove('fa-moon', 'fas');
-            icon.classList.add('fa-sun', 'far');
-          } else {
-            icon.classList.remove('fa-sun', 'fas');
-            icon.classList.add('fa-moon', 'far');
-          }
+          if (isDark) { icon.classList.remove('fa-moon','fas'); icon.classList.add('fa-sun','far'); }
+          else { icon.classList.remove('fa-sun','fas'); icon.classList.add('fa-moon','far'); }
         });
       };
 
       const setTheme = (isDark) => {
-        if (isDark) {
-          htmlElement.classList.add('dark');
-          localStorage.setItem('theme', 'dark');
-        } else {
-          htmlElement.classList.remove('dark');
-          localStorage.setItem('theme', 'light');
-        }
+        if (isDark) { htmlElement.classList.add('dark'); localStorage.setItem('theme','dark'); }
+        else { htmlElement.classList.remove('dark'); localStorage.setItem('theme','light'); }
         updateIconAppearance(isDark);
       };
 
-      const currentTheme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setTheme(currentTheme === 'dark' || (!currentTheme && prefersDark));
+      // Normally we would initialize from localStorage / media query here.
+      // Intentionally disabled to keep light-only look.
+      // const currentTheme = localStorage.getItem('theme');
+      // const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      // setTheme(currentTheme === 'dark' || (!currentTheme && prefersDark));
 
-      if (mobileIconBtn) {
-        mobileIconBtn.addEventListener('click', () => {
-          setTheme(!htmlElement.classList.contains('dark'));
-        });
-      }
-      if (desktopIconBtn) {
-        desktopIconBtn.addEventListener('click', () => {
-          setTheme(!htmlElement.classList.contains('dark'));
-        });
-      }
+      // if (mobileIconBtn) mobileIconBtn.addEventListener('click', () => setTheme(!htmlElement.classList.contains('dark')));
+      // if (desktopIconBtn) desktopIconBtn.addEventListener('click', () => setTheme(!htmlElement.classList.contains('dark')));
     });
   </script>
+  -->
 
   <script>
-    // Mobile Menu Script, runs after DOM content is loaded
+    // Mobile Menu Script (unchanged)
     document.addEventListener('DOMContentLoaded', () => {
       const mobileMenuButton = document.getElementById('mobile-menu-button');
       const mobileMenu = document.getElementById('mobile-menu');
       const hamburgerIcon = document.getElementById('hamburger-icon');
       const crossIcon = document.getElementById('cross-icon');
 
-
-      if (mobileMenuButton && mobileMenu && hamburgerIcon && crossIcon) { // Add checks for element existence
+      if (mobileMenuButton && mobileMenu && hamburgerIcon && crossIcon) {
         mobileMenuButton.addEventListener('click', () => {
           mobileMenu.classList.toggle('hidden');
-          
-          // Toggle icon visibility
           hamburgerIcon.classList.toggle('hidden');
           crossIcon.classList.toggle('hidden');
-
-          console.log('Mobile menu button clicked. Menu visibility:', mobileMenu.classList.contains('hidden') ? 'hidden' : 'visible');
         });
-
 
         mobileMenu.addEventListener('click', (e) => {
           if (e.target.tagName === 'A') {
             mobileMenu.classList.add('hidden');
-            // Ensure icons revert to hamburger when menu closes by clicking a link
             hamburgerIcon.classList.remove('hidden');
             crossIcon.classList.add('hidden');
-            console.log('Link clicked in mobile menu. Menu hidden.');
           }
         });
 
-
         window.addEventListener('resize', () => {
-          if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint is typically 768px
+          if (window.innerWidth >= 768) {
             if (!mobileMenu.classList.contains('hidden')) {
               mobileMenu.classList.add('hidden');
-              // Ensure icons revert to hamburger when menu closes due to resize
               hamburgerIcon.classList.remove('hidden');
               crossIcon.classList.add('hidden');
-              console.log('Window resized to desktop, mobile menu hidden.');
             }
           }
         });
-
       } else {
         console.error("Mobile menu button, menu, or icons not found. Check HTML IDs.");
       }
     });
   </script>
-
 </body>
 </html>

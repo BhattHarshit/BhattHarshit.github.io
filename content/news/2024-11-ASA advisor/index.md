@@ -4,7 +4,7 @@ date: 2024-11-10
 image: "ASAadvisor.jpeg"
 summary: "Commenced the position of an Advisor to the Asian Student Association at NC State."
 tags: ["academic", "leadership"]
-weight: 2
+# weight: 2
 draft: false
 ---
 

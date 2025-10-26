@@ -1,54 +1,203 @@
 {{ define "main" }}
-<section class="max-w-5xl mx-auto px-6 py-12">
+<section class="mx-auto px-0 py-12">  <!-- full-bleed: no side gaps -->
 
-  <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-6">{{ .Title }}</h1>
+  <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8 px-6">{{ .Title }}</h1>
 
-  {{ if .Content }}
-    <div class="prose dark:prose-invert max-w-none mb-8 text-lg text-gray-700 dark:text-gray-300">
-      {{ .Content }}
+  {{ with .Content }}
+    <div class="prose dark:prose-invert max-w-none mb-12 text-lg text-gray-700 dark:text-gray-300 px-6">
+      {{ . }}
     </div>
   {{ end }}
 
   {{ if .Pages }}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {{ range .Pages.ByWeight }}
-        {{ $newsItem := . }}
-        {{ $image := $newsItem.Resources.GetMatch ($newsItem.Params.image) }}
+    {{/* Split: My Tools vs Other Tools (missing or false => Other) */}}
+    {{ $mytools := where .Pages "Params.my_tool" true }}
+    {{ $others  := where .Pages "Params.my_tool" "ne" true }}
 
-        <article class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transform hover:scale-105 transition duration-300 ease-in-out flex flex-col">
-          {{ if $image }}
-            <img class="w-full h-48 object-cover" src="{{ $image.RelPermalink }}" alt="{{ $newsItem.Title }}">
-          {{ else }}
-            <div class="w-full h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">No Image</div>
+    {{ if gt (len $mytools) 0 }}
+      <h2 class="px-6 text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4"></h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-12 px-6">
+        {{ range $mytools.ByWeight }}
+          {{ $p := . }}
+          {{ $href := or $p.Params.external_url $p.Permalink }}
+          {{ $isExternal := hasPrefix $href "http" }}
+          {{ $imgRes := $p.Resources.GetMatch ($p.Params.image) }}
+          {{ $alt := or $p.Params.alt $p.Title }}
+          {{ $uid := printf "info-%s" ($p.RelPermalink | urlize) }}
+
+          {{/* Choose short description if available (for the info tab) */}}
+          {{ $desc := "" }}
+          {{ if $p.Params.description }}
+            {{ $desc = $p.Params.description }}
+          {{ else if $p.Summary }}
+            {{ $desc = $p.Summary | plainify }}
+          {{ else if $p.Content }}
+            {{ $desc = $p.Content | plainify | truncate 220 "…" }}
           {{ end }}
 
-          <div class="p-6 flex-grow flex flex-col">
-            <h2 class="text-xl font-semibold mb-2">
-              <a href="{{ $newsItem.Permalink }}" class="text-indigo-600 hover:underline dark:text-indigo-400">
-                {{ $newsItem.Title }}
-              </a>
-            </h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">{{ $newsItem.Date.Format "January 2, 2006" }}</p>
-
-            <div class="text-gray-700 dark:text-gray-300 text-base mb-4 line-clamp-3">
-              {{ if $newsItem.Summary }}
-                {{ $newsItem.Summary | safeHTML }}
+          <div class="flex flex-col items-center text-center">
+            <!-- Clickable icon (unchanged hover/scale) -->
+            <a href="{{ $href }}" {{ if $isExternal }}target="_blank" rel="noopener noreferrer"{{ end }}
+               class="relative block rounded-2xl transition-transform duration-300 ease-out transform hover:scale-110 focus-visible:ring-4 focus-visible:ring-indigo-400/60">
+              {{ if $imgRes }}
+                <img
+                  src="{{ $imgRes.RelPermalink }}"
+                  alt="{{ $alt }}"
+                  class="h-36 w-36 sm:h-40 sm:w-40 object-cover rounded-2xl shadow-lg ring-1 ring-gray-200 dark:ring-gray-700
+                         hover:shadow-2xl hover:ring-indigo-200 dark:hover:ring-indigo-700 transition-all duration-300 ease-out" />
+              {{ else if $p.Params.image }}
+                <img
+                  src="{{ $p.Params.image }}"
+                  alt="{{ $alt }}"
+                  class="h-36 w-36 sm:h-40 sm:w-40 object-cover rounded-2xl shadow-lg ring-1 ring-gray-200 dark:ring-gray-700
+                         hover:shadow-2xl hover:ring-indigo-200 dark:hover:ring-indigo-700 transition-all duration-300 ease-out" />
               {{ else }}
-                {{ $newsItem.Content | plainify | truncate 150 "..." | safeHTML }}
+                <div
+                  class="h-36 w-36 sm:h-40 sm:w-40 rounded-2xl shadow-lg ring-1 ring-gray-200 dark:ring-gray-700
+                         bg-gradient-to-br from-indigo-600 via-violet-600 to-fuchsia-600
+                         flex items-center justify-center text-white text-base font-semibold
+                         transition-transform duration-300 ease-out hover:scale-110 hover:shadow-2xl">
+                  {{ $p.Title }}
+                </div>
+              {{ end }}
+            </a>
+
+            <!-- Title row + info tab -->
+            <div class="mt-4 flex items-center justify-center gap-2">
+              <h3 class="text-base sm:text-xl font-medium text-gray-900 dark:text-gray-100">
+                <a href="{{ $href }}" {{ if $isExternal }}target="_blank" rel="noopener noreferrer"{{ end }}
+                   class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                  {{ $p.Title }}
+                </a>
+              </h3>
+
+              {{ if $desc }}
+                <button
+                  type="button"
+                  class="info-toggle inline-flex items-center justify-center rounded-full
+                         text-gray-600 dark:text-gray-300 ring-5 ring-gray-200 dark:ring-gray-700
+                         bg-white/80 dark:bg-gray-800/80 transition-colors"
+                  aria-expanded="false"
+                  aria-controls="{{ $uid }}"
+                  title="More info">
+                  <i class="fa-solid fa-circle-info text-lg"></i>
+                </button>
               {{ end }}
             </div>
 
-            <div class="mt-auto"> <a href="{{ $newsItem.Permalink }}" class="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
-                Read more →
-              </a>
-            </div>
+            {{ if $desc }}
+              <div id="{{ $uid }}" class="mt-3 hidden max-w-xs text-sm text-gray-700 dark:text-gray-300">
+                {{ $desc }}
+              </div>
+            {{ end }}
           </div>
-        </article>
-      {{ end }}
-    </div>
-  {{ else }}
-    <p class="text-gray-500 dark:text-gray-400">No items available at this time.</p>
-  {{ end }}
+        {{ end }}
+      </div>
+    {{ end }}
 
+    {{ if gt (len $others) 0 }}
+      <h2 class="px-6 mt-12 text-3xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Other useful Tools:</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-12 py-7 px-1">
+        {{ range $others.ByWeight }}
+          {{ $p := . }}
+          {{ $href := or $p.Params.external_url $p.Permalink }}
+          {{ $isExternal := hasPrefix $href "http" }}
+          {{ $imgRes := $p.Resources.GetMatch ($p.Params.image) }}
+          {{ $alt := or $p.Params.alt $p.Title }}
+          {{ $uid := printf "info-%s" ($p.RelPermalink | urlize) }}
+
+          {{/* short description for the info tab */}}
+          {{ $desc := "" }}
+          {{ if $p.Params.description }}
+            {{ $desc = $p.Params.description }}
+          {{ else if $p.Summary }}
+            {{ $desc = $p.Summary | plainify }}
+          {{ else if $p.Content }}
+            {{ $desc = $p.Content | plainify | truncate 220 "…" }}
+          {{ end }}
+
+          <div class="flex flex-col items-center text-center">
+            <a href="{{ $href }}" {{ if $isExternal }}target="_blank" rel="noopener noreferrer"{{ end }}
+               class="relative block rounded-2xl transition-transform duration-300 ease-out transform hover:scale-110 focus-visible:ring-4 focus-visible:ring-indigo-400/60">
+              {{ if $imgRes }}
+                <img
+                  src="{{ $imgRes.RelPermalink }}"
+                  alt="{{ $alt }}"
+                  class="h-36 w-36 sm:h-40 sm:w-40 object-cover rounded-2xl shadow-lg ring-1 ring-gray-200 dark:ring-gray-700
+                         hover:shadow-2xl hover:ring-indigo-200 dark:hover:ring-indigo-700 transition-all duration-300 ease-out" />
+              {{ else if $p.Params.image }}
+                <img
+                  src="{{ $p.Params.image }}"
+                  alt="{{ $alt }}"
+                  class="h-36 w-36 sm:h-40 sm:w-40 object-cover rounded-2xl shadow-lg ring-1 ring-gray-200 dark:ring-gray-700
+                         hover:shadow-2xl hover:ring-indigo-200 dark:hover:ring-indigo-700 transition-all duration-300 ease-out" />
+              {{ else }}
+                <div
+                  class="h-36 w-36 sm:h-40 sm:w-40 rounded-2xl shadow-lg ring-1 ring-gray-200 dark:ring-gray-700
+                         bg-gradient-to-br from-indigo-600 via-violet-600 to-fuchsia-600
+                         flex items-center justify-center text-white text-base font-semibold
+                         transition-transform duration-300 ease-out hover:scale-110 hover:shadow-2xl">
+                  {{ $p.Title }}
+                </div>
+              {{ end }}
+            </a>
+
+            <div class="mt-4 flex items-center justify-center gap-2">
+              <h3 class="text-base sm:text-xl font-medium text-gray-900 dark:text-gray-100">
+                <a href="{{ $href }}" {{ if $isExternal }}target="_blank" rel="noopener noreferrer"{{ end }}
+                   class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                  {{ $p.Title }}
+                </a>
+              </h3>
+
+              {{ if $desc }}
+                <button
+                  type="button"
+                  class="info-toggle inline-flex items-center justify-center rounded-full
+                         text-gray-600 dark:text-gray-300 ring-5 ring-gray-200 dark:ring-gray-700
+                         bg-white/80 dark:bg-gray-800/80 transition-colors"
+                  aria-expanded="false"
+                  aria-controls="{{ $uid }}"
+                  title="More info">
+                  <i class="fa-solid fa-circle-info text-lg"></i>
+                </button>
+              {{ end }}
+            </div>
+
+            {{ if $desc }}
+              <div id="{{ $uid }}" class="mt-3 hidden max-w-xs text-sm text-gray-700 dark:text-gray-300">
+                {{ $desc }}
+              </div>
+            {{ end }}
+          </div>
+        {{ end }}
+      </div>
+    {{ end }}
+  {{ else }}
+    <p class="text-gray-500 dark:text-gray-400 px-6">No items available yet.</p>
+  {{ end }}
 </section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.info-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('aria-controls');
+        const panel = document.getElementById(id);
+        const open = btn.getAttribute('aria-expanded') === 'true';
+
+        btn.setAttribute('aria-expanded', String(!open));
+        panel && panel.classList.toggle('hidden', open);
+
+        // subtle active look when open
+        btn.classList.toggle('text-indigo-700', !open);
+        btn.classList.toggle('ring-indigo-200', !open);
+        btn.classList.toggle('bg-indigo-50', !open);
+        btn.classList.toggle('dark:text-indigo-300', !open);
+        btn.classList.toggle('dark:ring-indigo-700', !open);
+        btn.classList.toggle('dark:bg-indigo-900/30', !open);
+      });
+    });
+  });
+</script>
 {{ end }}
