@@ -21,8 +21,11 @@ draft: false
 
 ### Research Reports and Technical Contributions
 
-- *Matrix Sketching for Large-Scale Data*, SIAM Graduate Student Mathematical Modeling Camp (GSMMC), 2025.  
-  [View Report](https://www.siam.org/media/42tb0vd0/gsmmc2025_matrixskectching.pdf)
+- **[Randomized Matrix Sketching and Least Squares Methods for Classification Problems](https://www.siam.org/media/42tb0vd0/gsmmc2025_matrixskectching.pdf)**  
+  SIAM Graduate Student Mathematical Modeling Camp (GSMMC), 2025. [[View details](https://www.siam.org/conferences-events/workshops/2025-graduate-student-mathematical-modeling-camp/)]
+
+- *Direction of Arrival Estimation based on AI/ML Methods: [SIAM Mathematical Problems in Industry Workshop 2025](https://www.siam.org/conferences-events/workshops/2025-mathematical-problems-in-industry-workshop/).*  
+  Collaborative, non-disclosable work with **[RTX Corporation](https://www.rtx.com/)**. [[View details](https://www.siam.org/media/2qimd3qe/2025rtx.pdf)]
 
 
 <!-- ---
