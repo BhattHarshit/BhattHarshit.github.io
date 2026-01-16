@@ -1,9 +1,9 @@
 ---
 title: "MA 580 (601) — Numerical Analysis I"
-semester: "Spring 2025"
+semester: "Spring 2026, 2025"
 role: "Instructor"
-date: 2025-01-15
-endDate: 2025-05-03
+date: 2026-01-12
+endDate: 2026-05-09
 draft: false
 ---
 
@@ -63,4 +63,4 @@ All required texts are freely available via NC State Library:
 <!-- **Syllabus PDF**  
 [Download syllabus (PDF)](/files/syllabus/ma580_spring2024.pdf) -->
 
-<p class="text-gray-500 dark:text-gray-400 text-sm mt-8">This page summarizes the Spring 2025 offering. Policies may differ in future semesters.</p>
+<p class="text-gray-500 dark:text-gray-400 text-sm mt-8">This page summarizes the Spring 2026 offering. Policies may differ in future semesters.</p>
