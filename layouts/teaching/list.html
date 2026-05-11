@@ -12,37 +12,38 @@
   {{ $now := now }}
   {{ $s := newScratch }}
   {{ $s.Set "hasCurrent" false }}
+  {{ $s.Set "hasUpcoming" false }}
   {{ $s.Set "hasPrev" false }}
 
-  {{/* -------- CURRENT: endDate >= now -------- */}}
+  {{/* -------- CURRENT: startDate <= now <= endDate -------- */}}
   {{ range .Pages.ByDate.Reverse }}
     {{ $p := . }}
-    {{ with $p.Params.endDate }}
-      {{ $end := (time.AsTime .) }}
-      {{ if ge $end $now }}
-        {{ if not ($s.Get "hasCurrent") }}
-          <div class="mb-10">
-            <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Currently Teaching</h2>
-            <ul class="space-y-3">
-          {{ $s.Set "hasCurrent" true }}
-        {{ end }}
+    {{ $start := $p.Date }}
+    {{ with $p.Params.startDate }}{{ $start = time.AsTime . }}{{ end }}
+    {{ $end := time.AsTime $p.Params.endDate }}
 
-        {{ $start := $p.Date }}
-        {{ with $p.Params.startDate }}{{ $start = (time.AsTime .) }}{{ end }}
-        {{ $sem := $p.Params.semester }}
-        {{ $role := $p.Params.role }}
-
-        <li class="rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/60 dark:bg-indigo-900/20 px-4 py-3">
-          <a href="{{ $p.Permalink }}" class="flex flex-wrap items-baseline gap-3 text-indigo-700 dark:text-indigo-300 hover:underline">
-            <span class="inline-flex items-center rounded-full text-xs font-semibold px-2 py-0.5 bg-indigo-600/10">Active</span>
-            <span class="text-xl font-semibold">{{ $p.Title }}</span>
-            {{ with $sem }}<span class="text-sm"> ({{ . }}{{ with $role }}, {{ . }}{{ end }})</span>{{ end }}
-          </a>
-          <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ $start | time.Format "Jan 2, 2006" }} – {{ $end | time.Format "Jan 2, 2006" }}
-          </p>
-        </li>
+    {{ if and (le $start $now) (ge $end $now) }}
+      {{ if not ($s.Get "hasCurrent") }}
+        <div class="mb-10">
+          <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Currently Teaching</h2>
+          <ul class="space-y-3">
+        {{ $s.Set "hasCurrent" true }}
       {{ end }}
+
+      <li class="rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/60 dark:bg-indigo-900/20 px-4 py-3">
+        <a href="{{ $p.Permalink }}" class="flex flex-wrap items-baseline gap-3 text-indigo-700 dark:text-indigo-300 hover:underline">
+          <span class="inline-flex items-center rounded-full text-xs font-semibold px-2 py-0.5 bg-indigo-600/10">
+            Active
+          </span>
+          <span class="text-xl font-semibold">{{ $p.Title }}</span>
+          {{ with $p.Params.semester }}
+            <span class="text-sm">({{ . }}{{ with $p.Params.role }}, {{ . }}{{ end }})</span>
+          {{ end }}
+        </a>
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+          {{ $start | time.Format "Jan 2, 2006" }} – {{ $end | time.Format "Jan 2, 2006" }}
+        </p>
+      </li>
     {{ end }}
   {{ end }}
 
@@ -51,34 +52,80 @@
     </div>
   {{ end }}
 
+
+  {{/* -------- UPCOMING: startDate > now -------- */}}
+  {{ range .Pages.ByDate }}
+    {{ $p := . }}
+    {{ $start := $p.Date }}
+    {{ with $p.Params.startDate }}{{ $start = time.AsTime . }}{{ end }}
+    {{ $end := time.AsTime $p.Params.endDate }}
+
+    {{ if gt $start $now }}
+      {{ if not ($s.Get "hasUpcoming") }}
+        <div class="mb-10">
+          <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Upcoming Courses</h2>
+          <ul class="space-y-4">
+        {{ $s.Set "hasUpcoming" true }}
+      {{ end }}
+
+      <li class="relative overflow-hidden rounded-2xl border border-indigo-200 dark:border-indigo-800 bg-white/80 dark:bg-gray-900/50 px-5 py-4 shadow-sm">
+        <div class="absolute left-0 top-0 h-full w-1.5 bg-indigo-500 dark:bg-indigo-400"></div>
+
+        <a href="{{ $p.Permalink }}" class="group block pl-2 text-indigo-600 dark:text-indigo-400 hover:underline">
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="inline-flex items-center rounded-full text-xs font-semibold px-2.5 py-1 bg-indigo-600/10 text-indigo-700 dark:text-indigo-300">
+              Upcoming
+            </span>
+
+            <span class="text-xl font-semibold text-indigo-600 dark:text-indigo-400 group-hover:underline">
+              {{ $p.Title }}
+            </span>
+          </div>
+
+          {{ with $p.Params.semester }}
+            <p class="mt-1 text-sm text-gray-700 dark:text-gray-300">
+              {{ . }}{{ with $p.Params.role }} · {{ . }}{{ end }}
+            </p>
+          {{ end }}
+        </a>
+
+        <p class="mt-2 pl-2 text-sm text-gray-600 dark:text-gray-400">
+          Begins {{ $start | time.Format "Jan 2, 2006" }} · Ends {{ $end | time.Format "Jan 2, 2006" }}
+        </p>
+      </li>
+    {{ end }}
+  {{ end }}
+
+  {{ if ($s.Get "hasUpcoming") }}
+      </ul>
+    </div>
+  {{ end }}
+
+
   {{/* -------- PREVIOUS: endDate < now -------- */}}
   {{ range .Pages.ByDate.Reverse }}
     {{ $p := . }}
-    {{ with $p.Params.endDate }}
-      {{ $end := (time.AsTime .) }}
-      {{ if lt $end $now }}
-        {{ if not ($s.Get "hasPrev") }}
-          <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Previous Courses</h2>
-          <ul class="list-disc list-inside space-y-2 text-gray-800 dark:text-gray-200">
-          {{ $s.Set "hasPrev" true }}
-        {{ end }}
+    {{ $end := time.AsTime $p.Params.endDate }}
 
-        {{ $sem := $p.Params.semester }}
-        {{ $role := $p.Params.role }}
-
-        <li>
-          <a href="{{ $p.Permalink }}" class="text-indigo-600 dark:text-indigo-400 hover:underline">
-            {{ $p.Title }}
-            {{ with $sem }} ({{ . }}{{ with $role }}, {{ . }}{{ end }}) {{ end }}
-          </a>
-        </li>
+    {{ if lt $end $now }}
+      {{ if not ($s.Get "hasPrev") }}
+        <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Previous Courses</h2>
+        <ul class="list-disc list-inside space-y-2 text-gray-800 dark:text-gray-200">
+        {{ $s.Set "hasPrev" true }}
       {{ end }}
+
+      <li>
+        <a href="{{ $p.Permalink }}" class="text-indigo-600 dark:text-indigo-400 hover:underline">
+          {{ $p.Title }}
+          {{ with $p.Params.semester }}({{ . }}{{ with $p.Params.role }}, {{ . }}{{ end }}){{ end }}
+        </a>
+      </li>
     {{ end }}
   {{ end }}
 
   {{ if ($s.Get "hasPrev") }}
     </ul>
-  {{ else if not ($s.Get "hasCurrent") }}
+  {{ else if and (not ($s.Get "hasCurrent")) (not ($s.Get "hasUpcoming")) }}
     <p class="text-gray-500 dark:text-gray-400">No courses listed at this time.</p>
   {{ end }}
 

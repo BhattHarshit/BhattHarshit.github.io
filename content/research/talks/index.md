@@ -7,8 +7,18 @@ draft: false
 <div class="prose dark:prose-invert max-w-none research-links">
 
 ### 2026
+
+- **[27th Conference of the International Linear Algebra Society ILAS 2026](https://ilas2026.math.vt.edu/)**  
+ Virginia Tech, Blacksburg, May 18-22, 2026
+
+- **[Asynchronous Methods for Numerical Linear Algebra](https://icerm.brown.edu/program/topical_workshop/tw-26-amn)**  
+ ICERM at Brown University, May 4-8, 2026
+
 - **[Stochastic and Randomized Algorithms in Scientific Computing: Foundations and Applications](https://icerm.brown.edu/program/semester_program/sp-s26)**  
  (Poster Presenter), ICERM at Brown University, February 2-6, 2026
+
+
+<!--more-->
 
 ### 2025
 - **[Triangle Computational and Applied Mathematics Symposium (TriCAMS)](https://stsynkov.math.ncsu.edu/tricams2025/Home.html)**  
@@ -17,7 +27,6 @@ draft: false
 - **[Computational and mAthematical MEthods in machine LEarning, Optimization and iNference (ChAMELEON) Summer School 25](https://www.math.uh.edu/~andreas/teaching/chameleon-su25/)**  
   (Poster Presenter), University of Houston, August 11-15, 2025
 
-<!--more-->
 
 - **[Mathematical Problems in Industry Workshop (MPI), SIAM](https://www.siam.org/conferences-events/workshops/2025-mathematical-problems-in-industry-workshop/)**  
   Held at the Claremont Colleges, June 9–13, 2025

@@ -1,7 +1,7 @@
 ---
 title: "Introducing MathNews — a smarter hub for Mathematicians"
 date: 2025-10-06
-image: "mathnews.jpeg"
+image: "mathnews.png"
 summary: "MathNews is a professional and elegant search portal for mathematical opportunities, built with tools to elevate mathematical research work!"
 tags: ["announcement", "MathNews", "projects"]
 # weight: 1
