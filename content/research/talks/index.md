@@ -3,69 +3,110 @@ title: "Conferences & Workshops"
 date: 2025-05-21T00:00:00Z
 weight: 2
 draft: false
+pageType: "talks"
+
+talks:
+  - title: "Gene Golub SIAM Summer School"
+    url: "https://www.siam.org/programs-initiatives/programs/gene-golub-siam-summer-school/"
+    location: "Duke University"
+    dateText: "July 27 – August 7, 2026"
+    startDate: "2026-07-27"
+    endDate: "2026-08-07"
+
+  - title: "27th Conference of the International Linear Algebra Society ILAS 2026"
+    url: "https://ilas2026.math.vt.edu/"
+    location: "Virginia Tech, Blacksburg"
+    dateText: "May 18–22, 2026"
+    startDate: "2026-05-18"
+    endDate: "2026-05-22"
+
+  - title: "Asynchronous Methods for Numerical Linear Algebra"
+    url: "https://icerm.brown.edu/program/topical_workshop/tw-26-amn"
+    location: "ICERM at Brown University"
+    dateText: "May 4–8, 2026"
+    startDate: "2026-05-04"
+    endDate: "2026-05-08"
+
+  - title: "Stochastic and Randomized Algorithms in Scientific Computing: Foundations and Applications"
+    url: "https://icerm.brown.edu/program/semester_program/sp-s26"
+    role: "Poster Presenter"
+    location: "ICERM at Brown University"
+    dateText: "February 2–6, 2026"
+    startDate: "2026-02-02"
+    endDate: "2026-02-06"
+
+  - title: "Triangle Computational and Applied Mathematics Symposium (TriCAMS)"
+    url: "https://stsynkov.math.ncsu.edu/tricams2025/Home.html"
+    role: "Poster Presenter"
+    location: "North Carolina State University"
+    dateText: "November 8–9, 2025"
+    startDate: "2025-11-08"
+    endDate: "2025-11-09"
+
+  - title: "Computational and mAthematical MEthods in machine LEarning, Optimization and iNference Summer School 25"
+    url: "https://www.math.uh.edu/~andreas/teaching/chameleon-su25/"
+    role: "Poster Presenter"
+    location: "University of Houston"
+    dateText: "August 11–15, 2025"
+    startDate: "2025-08-11"
+    endDate: "2025-08-15"
+
+  - title: "Mathematical Problems in Industry Workshop (MPI), SIAM"
+    url: "https://www.siam.org/conferences-events/workshops/2025-mathematical-problems-in-industry-workshop/"
+    location: "The Claremont Colleges"
+    dateText: "June 9–13, 2025"
+    startDate: "2025-06-09"
+    endDate: "2025-06-13"
+
+  - title: "Graduate Student Mathematical Modeling Camp (GSMMC), SIAM"
+    url: "https://www.siam.org/conferences-events/workshops/2025-graduate-student-mathematical-modeling-camp/"
+    location: "Cal Poly Pomona"
+    dateText: "June 4–7, 2025"
+    startDate: "2025-06-04"
+    endDate: "2025-06-07"
+
+  - title: "Perspectives in Modern Mathematics: The Fifth Duke Mathematical Journal Conference"
+    url: "https://sites.duke.edu/dmj2025/"
+    location: "Duke University"
+    dateText: "April 25–27, 2025"
+    startDate: "2025-04-25"
+    endDate: "2025-04-27"
+
+  - title: "Triangle Area Graduate Mathematics Conference (TAGMaC)"
+    url: "https://sites.duke.edu/tagmac/"
+    location: "Duke University"
+    dateText: "February 2025"
+    startDate: "2025-02-01"
+    endDate: "2025-02-28"
+
+  - title: "Triangle Computational and Applied Mathematics Symposium (TriCAMS)"
+    url: "https://math.unc.edu/tricams/"
+    location: "UNC Chapel Hill"
+    dateText: "October 2024"
+    startDate: "2024-10-01"
+    endDate: "2024-10-31"
+
+  - title: "Triangle Computational and Applied Mathematics Symposium (TriCAMS)"
+    url: "https://sites.math.duke.edu/~jonm/Tricams/"
+    location: "Duke University"
+    dateText: "November 2023"
+    startDate: "2023-11-01"
+    endDate: "2023-11-30"
+
+organizedEvents:
+  - title: "19th Annual Graduate Student Research Symposium at North Carolina State University"
+    url: "https://grad.ncsu.edu/students/signature-events/symposium/"
+    role: "Co-organizer"
+    location: "NC State University"
+    dateText: "April 8, 2026"
+    startDate: "2026-04-08"
+    endDate: "2026-04-08"
+
+  - title: "Sandia National Laboratories Information Session"
+    # url: "#"
+    role: "Organizer"
+    location: "NC State University"
+    dateText: "March 11, 2026"
+    startDate: "2026-03-11"
+    endDate: "2026-03-11"
 ---
-<div class="prose dark:prose-invert max-w-none research-links">
-
-### 2026
-
-- **[27th Conference of the International Linear Algebra Society ILAS 2026](https://ilas2026.math.vt.edu/)**  
- Virginia Tech, Blacksburg, May 18-22, 2026
-
-- **[Asynchronous Methods for Numerical Linear Algebra](https://icerm.brown.edu/program/topical_workshop/tw-26-amn)**  
- ICERM at Brown University, May 4-8, 2026
-
-- **[Stochastic and Randomized Algorithms in Scientific Computing: Foundations and Applications](https://icerm.brown.edu/program/semester_program/sp-s26)**  
- (Poster Presenter), ICERM at Brown University, February 2-6, 2026
-
-
-<!--more-->
-
-### 2025
-- **[Triangle Computational and Applied Mathematics Symposium (TriCAMS)](https://stsynkov.math.ncsu.edu/tricams2025/Home.html)**  
- (Poster Presenter), North Carolina State University, November 8-9, 2025
-
-- **[Computational and mAthematical MEthods in machine LEarning, Optimization and iNference (ChAMELEON) Summer School 25](https://www.math.uh.edu/~andreas/teaching/chameleon-su25/)**  
-  (Poster Presenter), University of Houston, August 11-15, 2025
-
-
-- **[Mathematical Problems in Industry Workshop (MPI), SIAM](https://www.siam.org/conferences-events/workshops/2025-mathematical-problems-in-industry-workshop/)**  
-  Held at the Claremont Colleges, June 9–13, 2025
-
-
-- **[Graduate Student Mathematical Modeling Camp (GSMMC), SIAM](https://www.siam.org/conferences-events/workshops/2025-graduate-student-mathematical-modeling-camp/)**  
-  Hosted at Cal Poly Pomona, June 4–7, 2025
-
-
-- **[Perspectives in Modern Mathematics: The Fifth Duke Mathematical Journal Conference](https://sites.duke.edu/dmj2025/)**  
-  Duke University — *April 25–27, 2025*
-
-- **[Triangle Area Graduate Mathematics Conference (TAGMaC)](https://sites.duke.edu/tagmac/)**  
-  Duke University — *February 2025*
-
-### 2024
-
-- **[Triangle Computational and Applied Mathematics Symposium (TriCAMS)](https://math.unc.edu/tricams/)**  
- UNC Chapel Hill — *October 2024*
-
-### 2023
-
-- **[Triangle Computational and Applied Mathematics Symposium (TriCAMS)](https://sites.math.duke.edu/~jonm/Tricams/)**  
-  Duke University — *November 2023*
-
-
-
-
-</div>
-
-<style>
-  /* Custom link style for research section */
-  .research-links a {
-    color: #111827; /* Tailwind gray-900 */
-    text-decoration: none;
-    transition: color 0.25s ease;
-  }
-  .research-links a:hover {
-    color: #111827; /* #4F46E5; /* Tailwind indigo-600 */
-    text-decoration: underline;
-  }
-</style>

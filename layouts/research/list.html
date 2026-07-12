@@ -12,51 +12,345 @@
   {{ if .Pages }}
     <div class="space-y-8">
       {{ range .Pages.ByWeight }}
-        <article class="border border-gray-300 dark:border-gray-700 rounded-lg p-6 hover:shadow-lg transition duration-300">
+        {{ $p := . }}
+
+        <article
+          data-href="{{ $p.Permalink }}"
+          tabindex="0"
+          role="link"
+          class="research-card border border-gray-300 dark:border-gray-700 rounded-lg p-6 hover:shadow-lg transition duration-300 cursor-pointer"
+        >
           <h2 class="text-2xl font-semibold mb-4">
-            <a href="{{ .Permalink }}" class="text-indigo-600 hover:underline dark:text-indigo-400">
-              {{ .Title }}
+            <a href="{{ $p.Permalink }}" class="text-indigo-600 hover:underline dark:text-indigo-400">
+              {{ $p.Title }}
             </a>
           </h2>
 
-          <h2 class="prose dark:prose-invert max-w-none mb-4 research-links">
-            {{ if .Truncated }}
-              {{ .Summary | safeHTML }}
-            {{ else }}
-              {{ .Content }}
-            {{ end }}
-          </h2>
+          {{ if eq $p.Params.pageType "talks" }}
 
-          <a href="{{ .Permalink }}" class="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:underline">
+            <div class="prose dark:prose-invert max-w-none mb-4 research-links talk-preview-block">
+              <ul class="talk-preview-list"></ul>
+
+              <ul class="hidden talk-preview-source">
+                {{ range $p.Params.talks }}
+                  {{ $title := .title }}
+                  {{ $url := .url }}
+
+                  <li
+                    class="talk-preview-source-item"
+                    data-start="{{ .startDate }}"
+                    data-end="{{ .endDate }}"
+                  >
+                    <strong>
+                      {{ if $url }}
+                        <a href="{{ $url }}" target="_blank" rel="noopener">{{ $title }}</a>
+                      {{ else }}
+                        <span class="research-title-no-link">{{ $title }}</span>
+                      {{ end }}
+                    </strong>
+
+                    <span class="talk-preview-badge upcoming-badge hidden">Upcoming</span>
+                    <span class="talk-preview-badge ongoing-badge hidden">Ongoing</span>
+
+                    <br>
+                    {{ with .role }}{{ . }}, {{ end }}{{ .location }}, {{ .dateText }}
+                  </li>
+                {{ end }}
+
+                {{ range $p.Params.organizedEvents }}
+                  {{ $title := .title }}
+                  {{ $url := .url }}
+
+                  <li
+                    class="talk-preview-source-item"
+                    data-start="{{ .startDate }}"
+                    data-end="{{ .endDate }}"
+                  >
+                    <strong>
+                      {{ if $url }}
+                        <a href="{{ $url }}" target="_blank" rel="noopener">{{ $title }}</a>
+                      {{ else }}
+                        <span class="research-title-no-link">{{ $title }}</span>
+                      {{ end }}
+                    </strong>
+
+                    <span class="talk-preview-badge upcoming-badge hidden">Upcoming</span>
+                    <span class="talk-preview-badge ongoing-badge hidden">Ongoing</span>
+
+                    <br>
+                    {{ with .role }}{{ . }}, {{ end }}{{ .location }}, {{ .dateText }}
+                  </li>
+                {{ end }}
+              </ul>
+            </div>
+
+          {{ else if eq $p.Params.pageType "publications" }}
+
+            <div class="prose dark:prose-invert max-w-none mb-4 research-links">
+              <ul>
+                {{ $pubPreview := newScratch }}
+                {{ $pubPreview.Set "count" 0 }}
+
+                {{ with $p.Params.preprints }}
+                  {{ range . }}
+                    {{ if lt ($pubPreview.Get "count") 3 }}
+                      {{ $title := .title }}
+                      {{ $url := .url }}
+
+                      <li>
+                        <strong>
+                          {{ if $url }}
+                            <a href="{{ $url }}" target="_blank" rel="noopener">{{ $title }}</a>
+                          {{ else }}
+                            <span class="research-title-no-link">{{ $title }}</span>
+                          {{ end }}
+                        </strong><br>
+                        {{ .authors | markdownify }}<br>
+                        <em>{{ .venue | markdownify }}</em>
+                      </li>
+
+                      {{ $pubPreview.Set "count" (add ($pubPreview.Get "count") 1) }}
+                    {{ end }}
+                  {{ end }}
+                {{ end }}
+
+                {{ with $p.Params.publications }}
+                  {{ range . }}
+                    {{ if lt ($pubPreview.Get "count") 3 }}
+                      {{ $title := .title }}
+                      {{ $url := .url }}
+
+                      <li>
+                        <strong>
+                          {{ if $url }}
+                            <a href="{{ $url }}" target="_blank" rel="noopener">{{ $title }}</a>
+                          {{ else }}
+                            <span class="research-title-no-link">{{ $title }}</span>
+                          {{ end }}
+                        </strong><br>
+                        {{ .authors | markdownify }}<br>
+                        <em>{{ .venue | markdownify }}</em>
+                      </li>
+
+                      {{ $pubPreview.Set "count" (add ($pubPreview.Get "count") 1) }}
+                    {{ end }}
+                  {{ end }}
+                {{ end }}
+
+                {{ with $p.Params.reports }}
+                  {{ range . }}
+                    {{ if lt ($pubPreview.Get "count") 3 }}
+                      {{ $title := .title }}
+                      {{ $url := .url }}
+
+                      <li>
+                        <strong>
+                          {{ if $url }}
+                            <a href="{{ $url }}" target="_blank" rel="noopener">{{ $title }}</a>
+                          {{ else }}
+                            <span class="research-title-no-link">{{ $title }}</span>
+                          {{ end }}
+                        </strong><br>
+                        {{ .authors | markdownify }}<br>
+                        <em>{{ .venue | markdownify }}</em>
+                      </li>
+
+                      {{ $pubPreview.Set "count" (add ($pubPreview.Get "count") 1) }}
+                    {{ end }}
+                  {{ end }}
+                {{ end }}
+              </ul>
+            </div>
+
+          {{ else }}
+
+            <div class="prose dark:prose-invert max-w-none mb-4 research-links">
+              {{ if $p.Truncated }}
+                {{ $p.Summary | safeHTML }}
+              {{ else }}
+                {{ $p.Content }}
+              {{ end }}
+            </div>
+
+          {{ end }}
+
+          <a href="{{ $p.Permalink }}" class="research-read-more inline-flex items-center hover:underline">
             Read more →
           </a>
         </article>
       {{ end }}
     </div>
-  {{ else }}
-    <!-- <p class="text-gray-500 dark:text-gray-400">No items available at this time.</p> -->
   {{ end }}
 
   {{ with .Params.philosophy }}
   <hr class="mt-12 border-gray-200 dark:border-gray-700">
-  <div class="mt-12 p-6 border-l-4 border-indigo-400 bg-indigo-50 rounded-r-xl shadow-sm text-gray-700 italic leading-relaxed text-lg">
-    <strong class="text-gray-800" >Philosophy:</strong><br>
+  <div class="mt-12 p-6 border-l-4 border-indigo-400 bg-indigo-50 dark:bg-indigo-900/20 rounded-r-xl shadow-sm text-gray-700 dark:text-gray-300 italic leading-relaxed text-lg">
+    <strong class="text-gray-800 dark:text-gray-100">Philosophy:</strong><br>
     {{ . | markdownify }}
   </div>
   {{ end }}
 
 </section>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".research-card").forEach((card) => {
+    const href = card.dataset.href;
+
+    card.addEventListener("click", (event) => {
+      if (event.target.closest("a")) return;
+      window.location.href = href;
+    });
+
+    card.addEventListener("keydown", (event) => {
+      if (event.target.closest("a")) return;
+
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        window.location.href = href;
+      }
+    });
+  });
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const parseDate = (value) => {
+    if (!value) return null;
+
+    const parts = String(value).split("-").map(Number);
+    if (parts.length !== 3 || parts.some(Number.isNaN)) return null;
+
+    const [y, m, d] = parts;
+    const date = new Date(y, m - 1, d);
+    date.setHours(0, 0, 0, 0);
+
+    return date;
+  };
+
+  document.querySelectorAll(".talk-preview-block").forEach((block) => {
+    const previewList = block.querySelector(".talk-preview-list");
+    const sourceItems = Array.from(block.querySelectorAll(".talk-preview-source-item"));
+
+    const upcoming = [];
+    const activeOrPast = [];
+
+    sourceItems.forEach((item) => {
+      const start = parseDate(item.dataset.start);
+      const end = parseDate(item.dataset.end);
+      const clone = item.cloneNode(true);
+
+      clone.classList.remove("talk-preview-source-item");
+
+      const upcomingBadge = clone.querySelector(".upcoming-badge");
+      const ongoingBadge = clone.querySelector(".ongoing-badge");
+
+      if (start && start > today) {
+        upcomingBadge?.classList.remove("hidden");
+        ongoingBadge?.remove();
+
+        upcoming.push({
+          node: clone,
+          sortDate: start
+        });
+      } else {
+        upcomingBadge?.remove();
+
+        if (start && start <= today && end && end >= today) {
+          ongoingBadge?.classList.remove("hidden");
+        } else {
+          ongoingBadge?.remove();
+        }
+
+        activeOrPast.push({
+          node: clone,
+          sortDate: end || start || new Date(0)
+        });
+      }
+    });
+
+    upcoming.sort((a, b) => a.sortDate - b.sortDate);
+    activeOrPast.sort((a, b) => b.sortDate - a.sortDate);
+
+    [...upcoming, ...activeOrPast].slice(0, 3).forEach((event) => {
+      previewList.appendChild(event.node);
+    });
+  });
+});
+</script>
+
 <style>
-  /* Custom link style for research section */
   .research-links a {
-    color: #111827; /* Tailwind gray-900 */
+    color: #111827;
     text-decoration: none;
     transition: color 0.25s ease;
   }
+
+  .dark .research-links a {
+    color: #f3f4f6;
+  }
+
   .research-links a:hover {
-    color:  #111827; /*#4F46E5; /* Tailwind indigo-600 */
+    color: #111827;
     text-decoration: underline;
+  }
+
+  .dark .research-links a:hover {
+    color: #f3f4f6;
+  }
+
+  .research-title-no-link {
+    font-weight: 500;
+  }
+
+  .research-read-more {
+    color: #4f46e5;
+  }
+
+  .dark .research-read-more {
+    color: #818cf8;
+  }
+
+  .talk-preview-badge,
+  .event-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-left: 0.45rem;
+    padding: 0.12rem 0.55rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(79, 70, 229, 0.18);
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(99, 102, 241, 0.14));
+    color: #4f46e5;
+    font-size: 0.72rem;
+    font-weight: 650;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  .talk-preview-badge::before,
+  .event-status-badge::before {
+    content: "";
+    width: 0.38rem;
+    height: 0.38rem;
+    border-radius: 9999px;
+    background: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.10);
+  }
+
+  .dark .talk-preview-badge,
+  .dark .event-status-badge {
+    border-color: rgba(129, 140, 248, 0.28);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.16), rgba(129, 140, 248, 0.10));
+    color: #a5b4fc;
+  }
+
+  .dark .talk-preview-badge::before,
+  .dark .event-status-badge::before {
+    background: #818cf8;
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.14);
   }
 </style>
 

@@ -1,62 +1,804 @@
 {{ define "main" }}
-<section class="max-w-5xl mx-auto px-6 py-5">
 
-  <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-6">{{ .Title }}</h1>
+<style>
+  /*
+    NEWS PAGE CONTROLS
 
-  {{ if .Content }}
-    <div class="prose dark:prose-invert max-w-none py-0.5 mb-8 text-lg text-gray-700 dark:text-gray-300">
-      {{ .Content }}
-    </div>
-  {{ end }}
+    Width:
+      --news-max-width: overall section width.
+      --news-side-gap: minimum left/right spacing.
 
-  {{ if .Pages }}
-    <div class="space-y-8">
-      {{ range .Pages.ByWeight }}
-        {{ $newsItem := . }}
-        {{ $image := $newsItem.Resources.GetMatch ($newsItem.Params.image) }}
+    Images:
+      --news-image-width: image column width on desktop.
+      --news-image-ratio: image aspect ratio on list page.
+      --news-detail-image-ratio: image aspect ratio in read-more view.
 
-        <article class="relative bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row transform hover:scale-105 transition duration-300 ease-in-out">
-          <!-- Full-card clickable overlay (on top) -->
-          <a href="{{ $newsItem.Permalink }}" aria-label="{{ $newsItem.Title }}" class="absolute inset-0 z-30"></a>
+    Spacing:
+      --news-gap-before-line: space between news content and divider line.
+      --news-gap-after-line: space between divider line and next news item.
 
-          {{ if $image }}
-            <div class="md:w-1/3 w-full h-48 md:h-auto overflow-hidden flex-shrink-0 pointer-events-none">
-              <img class="w-full h-full object-cover" src="{{ $image.RelPermalink }}" alt="{{ $newsItem.Title }}">
-            </div>
-          {{ else }}
-            <div class="md:w-1/3 w-full h-48 md:h-auto bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 flex-shrink-0 pointer-events-none">
-              No Image
-            </div>
-          {{ end }}
+    No-image marker:
+      --news-text-marker: marker for text-only news items.
+  */
 
-          <div class="p-6 flex-grow flex flex-col md:w-2/3 pointer-events-none">
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">{{ $newsItem.Date.Format "January 2, 2006" }}</p>
-            <h2 class="text-2xl font-semibold mb-3">
-              <a href="{{ $newsItem.Permalink }}" class="text-indigo-600 hover:underline dark:text-indigo-400">
-                {{ $newsItem.Title }}
-              </a>
-            </h2>
+  body {
+    background: #ffffff !important;
+  }
 
-            <div class="text-gray-700 dark:text-gray-300 text-base mb-4 flex-grow line-clamp-3">
-              {{ if $newsItem.Summary }}
-                {{ $newsItem.Summary | safeHTML }}
+  .hb-news-page {
+    --news-max-width: 1080px;
+    --news-side-gap: 0rem;
+
+    --news-image-width: 320px;
+    --news-image-ratio: 3 / 2;
+    --news-detail-image-ratio: 16 / 9;
+
+    --news-gap-before-line: 2.5rem;
+    --news-gap-after-line: 2.5rem;
+
+    /* --news-text-marker: "—"; */
+
+    width: 100%;
+    min-height: 100vh;
+    background: #ffffff;
+    color: #111827;
+    padding: 1rem 0 4rem;
+  }
+
+  .hb-news-wrap {
+    width: min(calc(100% - var(--news-side-gap) * 2), var(--news-max-width));
+    margin: 0 auto;
+    background: #ffffff;
+    box-sizing: border-box;
+  }
+
+  .hb-news-title {
+    margin: 0 0 4rem;
+    font-size: 2.25rem;
+    line-height: 1.225;
+    font-weight: 700;
+    letter-spacing: -0.0035em;
+    color: #111827;
+  }
+
+  .hb-news-entry {
+    margin: 0 0 var(--news-gap-after-line);
+    padding: 0 0 var(--news-gap-before-line);
+    border-bottom: 1px solid #eeeeee;
+    background: #ffffff;
+  }
+
+  .hb-news-reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  .hb-news-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .hb-news-row {
+    display: grid;
+    grid-template-columns: var(--news-image-width) minmax(0, 1fr);
+    gap: 38px;
+    align-items: center;
+  }
+
+  .hb-news-row.is-reverse {
+    grid-template-columns: minmax(0, 1fr) var(--news-image-width);
+    gap: 4px;
+  }
+
+  .hb-news-image-link,
+  .hb-news-image-box {
+    display: block;
+    overflow: hidden;
+    border-radius: 4px;
+    background: #ffffff;
+  }
+
+  .hb-news-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: var(--news-image-ratio);
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .hb-news-heading {
+    margin: 0;
+    font-size: 1.55rem;
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: #333333;
+  }
+
+  .hb-news-heading a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 160ms ease;
+  }
+
+  .hb-news-heading a:hover {
+    color: #4f46e5;
+  }
+
+  .hb-news-copy {
+    margin-top: 16px;
+    max-width: 640px;
+    font-size: 16.5px;
+    line-height: 1.58;
+    font-weight: 400;
+    color: #3c3b3b;
+  }
+
+  .hb-news-copy p {
+    margin: 0;
+  }
+
+  .hb-news-copy p + p {
+    margin-top: 6px;
+  }
+
+  .hb-news-copy strong {
+    font-weight: 600;
+    color: #3c3b3b;
+  }
+
+  .hb-news-date {
+    display: block;
+    margin-top: 18px;
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: #999999;
+  }
+
+  .hb-news-more {
+    display: inline-block;
+    margin-top: 17px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #4f46e5;
+    text-decoration: none;
+    transition: color 160ms ease, transform 160ms ease;
+  }
+
+  .hb-news-more:hover {
+    color: #3730a3;
+    transform: translateX(3px);
+  }
+
+  /* No-image news: full-width, newspaper-style row */
+  .hb-news-text-only {
+    position: relative;
+    width: 100%;
+    padding-left: 0rem;
+  }
+
+  .hb-news-text-only::before {
+    /* content: var(--news-text-marker); */
+    position: absolute;
+    left: 0;
+    top: 0.05rem;
+    color: #4b5563;
+    font-weight: 700;
+  }
+
+  .hb-news-text-only .hb-news-heading {
+    width: 100%;
+    max-width: none;
+    font-size: 1.55rem;
+    line-height: 1.32;
+  }
+
+  .hb-news-text-only .hb-news-copy {
+    width: 100%;
+    max-width: none;
+    margin-top: 16px;
+  }
+
+  .hb-news-text-only .hb-news-date {
+    margin-top: 16px;
+  }
+
+  /* Read-more detail view */
+  .hb-news-detail {
+    display: none;
+    background: #ffffff;
+  }
+
+  .hb-news-detail.is-active {
+    display: block;
+  }
+
+  .hb-news-detail-inner {
+    width: 100%;
+    max-width: var(--news-max-width);
+    margin: 0 auto;
+    background: #ffffff;
+  }
+
+  .hb-news-detail-back {
+    display: inline-block;
+    margin-bottom: 2.5rem;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #4f46e5;
+    text-decoration: none;
+  }
+
+  .hb-news-detail-back:hover {
+    color: #3730a3;
+  }
+
+  .hb-news-detail-date {
+    display: block;
+    margin-bottom: 1rem;
+    font-size: 15px;
+    color: #999999;
+  }
+
+  .hb-news-detail-title {
+    margin: 0;
+    width: 100%;
+    max-width: none;
+    font-size: 34px;
+    line-height: 1;
+    font-weight: 600;
+    color: #333333;
+  }
+
+  .hb-news-detail-image {
+    display: block;
+    width: 100%;
+    margin-top: 2.2rem;
+    aspect-ratio: var(--news-detail-image-ratio); 
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .hb-news-detail-body {
+    width: 100%;
+    max-width: none;
+    margin-top: 1.3rem;
+    font-size: 16px;
+    line-height: 1.68;
+    font-weight: 400;
+    color: #333333;
+  }
+
+  .hb-news-detail-body p {
+    margin: 0 0 5px;
+  }
+
+  .hb-news-detail-body strong {
+    font-weight: 600;
+    color: #555555;
+  }
+
+  .hb-news-detail-body h2 {
+    margin: 40px 0 15px;
+    font-size: 25px;
+    line-height: 1;
+    font-weight: 500;
+    color: #333333;
+  }
+
+  .hb-news-detail-body ul {
+    margin: 0 0 22px 22px;
+    padding: 0;
+  }
+
+  .hb-news-detail-body li {
+    margin-bottom: 10px;
+  }
+
+  .hb-news-detail-body li p {
+    margin: 0;
+  }
+
+  .hb-news-detail-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 34px;
+  }
+
+  .hb-news-detail-link {
+    display: block;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    padding: 18px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #333333;
+    text-decoration: none;
+    transition: border-color 160ms ease, color 160ms ease, transform 160ms ease;
+  }
+
+  .hb-news-detail-link:hover {
+    border-color: #4f46e5;
+    color: #4f46e5;
+    transform: translateY(-2px);
+  }
+
+  .hb-news-to-top {
+    position: fixed;
+    right: 26px;
+    bottom: 26px;
+    z-index: 60;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 1px solid #dddddd;
+    background: #ffffff;
+    color: #333333;
+    font-size: 22px;
+    line-height: 1;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition: opacity 220ms ease, transform 220ms ease, color 160ms ease, border-color 160ms ease;
+  }
+
+  .hb-news-to-top.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .hb-news-to-top:hover {
+    color: #4f46e5;
+    border-color: #4f46e5;
+  }
+
+  @media (max-width: 1100px) {
+    .hb-news-page {
+      --news-max-width: 920px;
+      --news-image-width: 300px;
+    }
+  }
+
+  @media (max-width: 820px) {
+    .hb-news-page {
+      --news-side-gap: 1.5rem;
+      padding: 3rem 0 5rem;
+    }
+
+    .hb-news-title {
+      margin-bottom: 3.4rem;
+      font-size: 34px;
+    }
+
+    .hb-news-entry {
+      margin-bottom: 3.2rem;
+      padding-bottom: 3.6rem;
+    }
+
+    .hb-news-row,
+    .hb-news-row.is-reverse {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .hb-news-row.is-reverse .hb-news-media {
+      order: 1;
+    }
+
+    .hb-news-row.is-reverse .hb-news-text {
+      order: 2;
+    }
+
+    .hb-news-heading {
+      font-size: 27px;
+    }
+
+    .hb-news-copy {
+      max-width: none;
+      margin-top: 18px;
+      font-size: 16.8px;
+    }
+
+    .hb-news-text-only .hb-news-heading {
+      font-size: 25px;
+    }
+
+    .hb-news-detail-title {
+      font-size: 31px;
+    }
+
+    .hb-news-detail-links {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .hb-news-page {
+      --news-side-gap: 1.25rem;
+    }
+
+    .hb-news-title {
+      font-size: 30px;
+    }
+
+    .hb-news-heading {
+      font-size: 25px;
+    }
+
+    .hb-news-copy {
+      font-size: 16.5px;
+    }
+
+    .hb-news-detail-title {
+      font-size: 28px;
+    }
+
+    .hb-news-detail-body {
+      font-size: 17px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hb-news-reveal {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+</style>
+
+<section id="news-top" class="hb-news-page">
+  <div class="hb-news-wrap">
+
+    <div id="hb-news-list-view">
+      <h1 class="hb-news-title" style="margin-left: 1.5rem;">
+        {{ or .Params.heading "Latest Updates and Announcements" }}
+      </h1>
+
+      {{ $items := sort .Params.news "date" "desc" }}
+      {{ $imageIndex := 0 }}
+
+      {{ if $items }}
+        <div class="hb-news-list">
+          {{ range $index, $item := $items }}
+            {{ $title := index $item "title" }}
+            {{ $slug := index $item "slug" }}
+            {{ $date := time (index $item "date") }}
+            {{ $image := index $item "image" }}
+            {{ $url := index $item "url" }}
+            {{ $paragraphs := index $item "paragraphs" }}
+            {{ $readMore := index $item "read_more" }}
+            {{ $imageSrc := "" }}
+
+            {{ if $image }}
+              {{ $imageSrc = printf "images/news/%s" $image | relURL }}
+            {{ end }}
+
+            {{ $reverse := false }}
+            {{ if $imageSrc }}
+              {{ $reverse = eq (mod $imageIndex 2) 1 }}
+              {{ $imageIndex = add $imageIndex 1 }}
+            {{ end }}
+
+            <article class="hb-news-entry hb-news-reveal">
+              {{ if $imageSrc }}
+
+                <div class="hb-news-row {{ if $reverse }}is-reverse{{ end }}">
+                  {{ if not $reverse }}
+                    <div class="hb-news-media">
+                      {{ if $readMore }}
+                        <a href="#{{ $slug }}" class="hb-news-image-link" data-news-detail-link="{{ $slug }}" aria-label="{{ $title }}">
+                          <img src="{{ $imageSrc }}" alt="{{ $title }}" class="hb-news-image">
+                        </a>
+                      {{ else if $url }}
+                        <a href="{{ $url }}" target="_blank" rel="noopener noreferrer" class="hb-news-image-link" aria-label="{{ $title }}">
+                          <img src="{{ $imageSrc }}" alt="{{ $title }}" class="hb-news-image">
+                        </a>
+                      {{ else }}
+                        <div class="hb-news-image-box">
+                          <img src="{{ $imageSrc }}" alt="{{ $title }}" class="hb-news-image">
+                        </div>
+                      {{ end }}
+                    </div>
+                  {{ end }}
+
+                  <div class="hb-news-text">
+                    <h2 class="hb-news-heading">
+                      {{ if $readMore }}
+                        <a href="#{{ $slug }}" data-news-detail-link="{{ $slug }}">{{ $title }}</a>
+                      {{ else if $url }}
+                        <a href="{{ $url }}" target="_blank" rel="noopener noreferrer">{{ $title }}</a>
+                      {{ else }}
+                        {{ $title }}
+                      {{ end }}
+                    </h2>
+
+                    {{ if $paragraphs }}
+                      <div class="hb-news-copy">
+                        {{ range $paragraphs }}
+                          <p>{{ . | markdownify }}</p>
+                        {{ end }}
+                      </div>
+                    {{ end }}
+
+                    <time datetime="{{ $date.Format "2006-01-02" }}" class="hb-news-date">
+                      {{ $date.Format "January 2, 2006" }}
+                    </time>
+
+                    {{ if $readMore }}
+                      <a href="#{{ $slug }}" class="hb-news-more" data-news-detail-link="{{ $slug }}">
+                        Read more →
+                      </a>
+                    {{ end }}
+                  </div>
+
+                  {{ if $reverse }}
+                    <div class="hb-news-media">
+                      {{ if $readMore }}
+                        <a href="#{{ $slug }}" class="hb-news-image-link" data-news-detail-link="{{ $slug }}" aria-label="{{ $title }}">
+                          <img src="{{ $imageSrc }}" alt="{{ $title }}" class="hb-news-image">
+                        </a>
+                      {{ else if $url }}
+                        <a href="{{ $url }}" target="_blank" rel="noopener noreferrer" class="hb-news-image-link" aria-label="{{ $title }}">
+                          <img src="{{ $imageSrc }}" alt="{{ $title }}" class="hb-news-image">
+                        </a>
+                      {{ else }}
+                        <div class="hb-news-image-box">
+                          <img src="{{ $imageSrc }}" alt="{{ $title }}" class="hb-news-image">
+                        </div>
+                      {{ end }}
+                    </div>
+                  {{ end }}
+                </div>
+
               {{ else }}
-                {{ $newsItem.Content | plainify | truncate 200 "..." | safeHTML }}
-              {{ end }}
-            </div>
 
-            <div class="mt-auto">
-              <a href="{{ $newsItem.Permalink }}" class="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
-                Read more →
-              </a>
-            </div>
+                <div class="hb-news-text-only">
+                  <h2 class="hb-news-heading">
+                    {{ if $readMore }}
+                      <a href="#{{ $slug }}" data-news-detail-link="{{ $slug }}">{{ $title }}</a>
+                    {{ else if $url }}
+                      <a href="{{ $url }}" target="_blank" rel="noopener noreferrer">{{ $title }}</a>
+                    {{ else }}
+                      {{ $title }}
+                    {{ end }}
+                  </h2>
+
+                  {{ if $paragraphs }}
+                    <div class="hb-news-copy">
+                      {{ range $paragraphs }}
+                        <p>{{ . | markdownify }}</p>
+                      {{ end }}
+                    </div>
+                  {{ end }}
+
+                  <time datetime="{{ $date.Format "2006-01-02" }}" class="hb-news-date">
+                    {{ $date.Format "January 2, 2006" }}
+                  </time>
+
+                  {{ if $readMore }}
+                    <a href="#{{ $slug }}" class="hb-news-more" data-news-detail-link="{{ $slug }}">
+                      Read more →
+                    </a>
+                  {{ end }}
+                </div>
+
+              {{ end }}
+            </article>
+          {{ end }}
+        </div>
+      {{ else }}
+        <p class="hb-news-copy">No news items available at this time.</p>
+      {{ end }}
+    </div>
+
+    {{ $items := sort .Params.news "date" "desc" }}
+    {{ range $item := $items }}
+      {{ if index $item "read_more" }}
+        {{ $title := index $item "title" }}
+        {{ $slug := index $item "slug" }}
+        {{ $date := time (index $item "date") }}
+        {{ $image := index $item "image" }}
+        {{ $details := index $item "details" }}
+        {{ $imageSrc := "" }}
+        {{ $showDetailImage := true }}
+
+        {{ if $image }}
+          {{ $imageSrc = printf "images/news/%s" $image | relURL }}
+        {{ end }}
+
+        {{ if isset $item "show_detail_image" }}
+          {{ $showDetailImage = index $item "show_detail_image" }}
+        {{ end }}
+
+        <article class="hb-news-detail" data-news-detail-panel="{{ $slug }}">
+          <div class="hb-news-detail-inner">
+            <a href="/news/" class="hb-news-detail-back" data-news-back>
+              ← Back to News
+            </a>
+
+            <time datetime="{{ $date.Format "2006-01-02" }}" class="hb-news-detail-date">
+              {{ $date.Format "January 2, 2006" }}
+            </time>
+
+            <h1 class="hb-news-detail-title">{{ $title }}</h1>
+
+            {{ if and $imageSrc $showDetailImage }}
+              <img src="{{ $imageSrc }}" alt="{{ $title }}" class="hb-news-detail-image">
+            {{ end }}
+
+            {{ with $details }}
+              <div class="hb-news-detail-body">
+                {{ with index . "intro" }}
+                  {{ range . }}
+                    <p>{{ . | markdownify }}</p>
+                  {{ end }}
+                {{ end }}
+
+                {{ with index . "sections" }}
+                  {{ range . }}
+                    <h2>{{ index . "heading" }}</h2>
+
+                    {{ with index . "paragraphs" }}
+                      {{ range . }}
+                        <p>{{ . | markdownify }}</p>
+                      {{ end }}
+                    {{ end }}
+
+                    {{ with index . "bullets" }}
+                      <ul>
+                        {{ range . }}
+                          <li>{{ . | markdownify }}</li>
+                        {{ end }}
+                      </ul>
+                    {{ end }}
+                  {{ end }}
+                {{ end }}
+
+                {{ with index . "links" }}
+                  <div class="hb-news-detail-links">
+                    {{ range . }}
+                      <a href="{{ index . "url" }}" target="_blank" rel="noopener noreferrer" class="hb-news-detail-link">
+                        {{ index . "label" }} →
+                      </a>
+                    {{ end }}
+                  </div>
+                {{ end }}
+              </div>
+            {{ end }}
           </div>
         </article>
       {{ end }}
-    </div>
-  {{ else }}
-    <p class="text-gray-500 dark:text-gray-400">No news items available at this time.</p>
-  {{ end }}
+    {{ end }}
 
+  </div>
+
+  <button id="hb-news-to-top" type="button" class="hb-news-to-top" aria-label="Go to top">
+    ↑
+  </button>
 </section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const listView = document.getElementById("hb-news-list-view");
+    const detailPanels = Array.from(document.querySelectorAll("[data-news-detail-panel]"));
+    const detailLinks = Array.from(document.querySelectorAll("[data-news-detail-link]"));
+    const backLinks = Array.from(document.querySelectorAll("[data-news-back]"));
+    const entries = document.querySelectorAll(".hb-news-reveal");
+    const topButton = document.getElementById("hb-news-to-top");
+
+    function showList(pushUrl) {
+      detailPanels.forEach(function (panel) {
+        panel.classList.remove("is-active");
+      });
+
+      if (listView) {
+        listView.style.display = "";
+      }
+
+      if (pushUrl) {
+        history.pushState(null, "", "/news/");
+      }
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function showDetail(slug, pushUrl) {
+      const activePanel = detailPanels.find(function (panel) {
+        return panel.getAttribute("data-news-detail-panel") === slug;
+      });
+
+      if (!activePanel) {
+        showList(false);
+        return;
+      }
+
+      if (listView) {
+        listView.style.display = "none";
+      }
+
+      detailPanels.forEach(function (panel) {
+        panel.classList.remove("is-active");
+      });
+
+      activePanel.classList.add("is-active");
+
+      if (pushUrl) {
+        history.pushState(null, "", "/news/#" + slug);
+      }
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function syncFromHash() {
+      const slug = window.location.hash.replace("#", "");
+      if (slug) {
+        showDetail(slug, false);
+      } else {
+        showList(false);
+      }
+    }
+
+    detailLinks.forEach(function (link) {
+      link.addEventListener("click", function (event) {
+        event.preventDefault();
+        showDetail(link.getAttribute("data-news-detail-link"), true);
+      });
+    });
+
+    backLinks.forEach(function (link) {
+      link.addEventListener("click", function (event) {
+        event.preventDefault();
+        showList(true);
+      });
+    });
+
+    window.addEventListener("popstate", syncFromHash);
+    syncFromHash();
+
+    const observer = new IntersectionObserver(function (items) {
+      items.forEach(function (item) {
+        item.target.classList.toggle("is-visible", item.isIntersecting);
+      });
+    }, {
+      threshold: 0.16,
+      rootMargin: "0px 0px -8% 0px"
+    });
+
+    entries.forEach(function (entry) {
+      observer.observe(entry);
+    });
+
+    function updateTopButton() {
+      if (!topButton) return;
+
+      if (window.scrollY > 500) {
+        topButton.classList.add("show");
+      } else {
+        topButton.classList.remove("show");
+      }
+    }
+
+    window.addEventListener("scroll", updateTopButton, { passive: true });
+    updateTopButton();
+
+    if (topButton) {
+      topButton.addEventListener("click", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    }
+  });
+</script>
+
 {{ end }}

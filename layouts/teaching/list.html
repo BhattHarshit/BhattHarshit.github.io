@@ -9,125 +9,169 @@
     </div>
   {{ end }}
 
-  {{ $now := now }}
-  {{ $s := newScratch }}
-  {{ $s.Set "hasCurrent" false }}
-  {{ $s.Set "hasUpcoming" false }}
-  {{ $s.Set "hasPrev" false }}
+  <div id="current-section" class="mb-10 hidden">
+    <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Currently Teaching</h2>
+    <ul id="current-list" class="space-y-3"></ul>
+  </div>
 
-  {{/* -------- CURRENT: startDate <= now <= endDate -------- */}}
-  {{ range .Pages.ByDate.Reverse }}
-    {{ $p := . }}
-    {{ $start := $p.Date }}
-    {{ with $p.Params.startDate }}{{ $start = time.AsTime . }}{{ end }}
-    {{ $end := time.AsTime $p.Params.endDate }}
+  <div id="upcoming-section" class="mb-10 hidden">
+    <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Upcoming Courses</h2>
+    <ul id="upcoming-list" class="space-y-4"></ul>
+  </div>
 
-    {{ if and (le $start $now) (ge $end $now) }}
-      {{ if not ($s.Get "hasCurrent") }}
-        <div class="mb-10">
-          <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Currently Teaching</h2>
-          <ul class="space-y-3">
-        {{ $s.Set "hasCurrent" true }}
-      {{ end }}
+  <div id="previous-section" class="hidden">
+    <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Previous Courses</h2>
+    <ul id="previous-list" class="list-disc list-inside space-y-2 text-gray-800 dark:text-gray-200"></ul>
+  </div>
 
-      <li class="rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/60 dark:bg-indigo-900/20 px-4 py-3">
-        <a href="{{ $p.Permalink }}" class="flex flex-wrap items-baseline gap-3 text-indigo-700 dark:text-indigo-300 hover:underline">
-          <span class="inline-flex items-center rounded-full text-xs font-semibold px-2 py-0.5 bg-indigo-600/10">
-            Active
-          </span>
-          <span class="text-xl font-semibold">{{ $p.Title }}</span>
-          {{ with $p.Params.semester }}
-            <span class="text-sm">({{ . }}{{ with $p.Params.role }}, {{ . }}{{ end }})</span>
-          {{ end }}
-        </a>
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-          {{ $start | time.Format "Jan 2, 2006" }} – {{ $end | time.Format "Jan 2, 2006" }}
-        </p>
-      </li>
+  <p id="no-courses" class="hidden text-gray-500 dark:text-gray-400">
+    No courses listed at this time.
+  </p>
+
+  <div id="course-source" class="hidden">
+    {{ range .Pages.ByDate.Reverse }}
+      {{ $p := . }}
+      {{ $start := $p.Date }}
+      {{ with $p.Params.startDate }}{{ $start = time.AsTime . }}{{ end }}
+      {{ $end := time.AsTime $p.Params.endDate }}
+
+      <div
+        class="course-item"
+        data-start="{{ $start.Format "2006-01-02" }}"
+        data-end="{{ $end.Format "2006-01-02" }}"
+        data-title="{{ $p.Title }}"
+        data-url="{{ $p.Permalink }}"
+        data-semester="{{ $p.Params.semester }}"
+        data-role="{{ $p.Params.role }}">
+      </div>
     {{ end }}
-  {{ end }}
-
-  {{ if ($s.Get "hasCurrent") }}
-      </ul>
-    </div>
-  {{ end }}
-
-
-  {{/* -------- UPCOMING: startDate > now -------- */}}
-  {{ range .Pages.ByDate }}
-    {{ $p := . }}
-    {{ $start := $p.Date }}
-    {{ with $p.Params.startDate }}{{ $start = time.AsTime . }}{{ end }}
-    {{ $end := time.AsTime $p.Params.endDate }}
-
-    {{ if gt $start $now }}
-      {{ if not ($s.Get "hasUpcoming") }}
-        <div class="mb-10">
-          <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Upcoming Courses</h2>
-          <ul class="space-y-4">
-        {{ $s.Set "hasUpcoming" true }}
-      {{ end }}
-
-      <li class="relative overflow-hidden rounded-2xl border border-indigo-200 dark:border-indigo-800 bg-white/80 dark:bg-gray-900/50 px-5 py-4 shadow-sm">
-        <div class="absolute left-0 top-0 h-full w-1.5 bg-indigo-500 dark:bg-indigo-400"></div>
-
-        <a href="{{ $p.Permalink }}" class="group block pl-2 text-indigo-600 dark:text-indigo-400 hover:underline">
-          <div class="flex flex-wrap items-center gap-3">
-            <span class="inline-flex items-center rounded-full text-xs font-semibold px-2.5 py-1 bg-indigo-600/10 text-indigo-700 dark:text-indigo-300">
-              Upcoming
-            </span>
-
-            <span class="text-xl font-semibold text-indigo-600 dark:text-indigo-400 group-hover:underline">
-              {{ $p.Title }}
-            </span>
-          </div>
-
-          {{ with $p.Params.semester }}
-            <p class="mt-1 text-sm text-gray-700 dark:text-gray-300">
-              {{ . }}{{ with $p.Params.role }} · {{ . }}{{ end }}
-            </p>
-          {{ end }}
-        </a>
-
-        <p class="mt-2 pl-2 text-sm text-gray-600 dark:text-gray-400">
-          Begins {{ $start | time.Format "Jan 2, 2006" }} · Ends {{ $end | time.Format "Jan 2, 2006" }}
-        </p>
-      </li>
-    {{ end }}
-  {{ end }}
-
-  {{ if ($s.Get "hasUpcoming") }}
-      </ul>
-    </div>
-  {{ end }}
-
-
-  {{/* -------- PREVIOUS: endDate < now -------- */}}
-  {{ range .Pages.ByDate.Reverse }}
-    {{ $p := . }}
-    {{ $end := time.AsTime $p.Params.endDate }}
-
-    {{ if lt $end $now }}
-      {{ if not ($s.Get "hasPrev") }}
-        <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">Previous Courses</h2>
-        <ul class="list-disc list-inside space-y-2 text-gray-800 dark:text-gray-200">
-        {{ $s.Set "hasPrev" true }}
-      {{ end }}
-
-      <li>
-        <a href="{{ $p.Permalink }}" class="text-indigo-600 dark:text-indigo-400 hover:underline">
-          {{ $p.Title }}
-          {{ with $p.Params.semester }}({{ . }}{{ with $p.Params.role }}, {{ . }}{{ end }}){{ end }}
-        </a>
-      </li>
-    {{ end }}
-  {{ end }}
-
-  {{ if ($s.Get "hasPrev") }}
-    </ul>
-  {{ else if and (not ($s.Get "hasCurrent")) (not ($s.Get "hasUpcoming")) }}
-    <p class="text-gray-500 dark:text-gray-400">No courses listed at this time.</p>
-  {{ end }}
+  </div>
 
 </section>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const currentList = document.getElementById("current-list");
+  const upcomingList = document.getElementById("upcoming-list");
+  const previousList = document.getElementById("previous-list");
+
+  const currentSection = document.getElementById("current-section");
+  const upcomingSection = document.getElementById("upcoming-section");
+  const previousSection = document.getElementById("previous-section");
+  const noCourses = document.getElementById("no-courses");
+
+  const parseDate = (value) => {
+    const [y, m, d] = value.split("-").map(Number);
+    return new Date(y, m - 1, d);
+  };
+
+  const metaText = (semester, role, style = "paren") => {
+    if (!semester && !role) return "";
+    if (style === "dot") return `${semester || ""}${role ? " · " + role : ""}`;
+    return `(${semester || ""}${role ? ", " + role : ""})`;
+  };
+
+  const formatDate = (date) =>
+    date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric"
+    });
+
+  const makeCurrentCard = (course, start, end) => {
+    const li = document.createElement("li");
+    li.className = "rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/60 dark:bg-indigo-900/20 px-4 py-3";
+
+    li.innerHTML = `
+      <a href="${course.url}" class="flex flex-wrap items-baseline gap-3 text-indigo-700 dark:text-indigo-300 hover:underline">
+        <span class="inline-flex items-center rounded-full text-xs font-semibold px-2 py-0.5 bg-indigo-600/10">Active</span>
+        <span class="text-xl font-semibold">${course.title}</span>
+        ${course.semester ? `<span class="text-sm">${metaText(course.semester, course.role)}</span>` : ""}
+      </a>
+      <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        ${formatDate(start)} – ${formatDate(end)}
+      </p>
+    `;
+
+    return li;
+  };
+
+  const makeUpcomingCard = (course, start, end) => {
+    const li = document.createElement("li");
+    li.className = "relative overflow-hidden rounded-2xl border border-indigo-200 dark:border-indigo-800 bg-white/80 dark:bg-gray-900/50 px-5 py-4 shadow-sm";
+
+    li.innerHTML = `
+      <div class="absolute left-0 top-0 h-full w-1.5 bg-indigo-500 dark:bg-indigo-400"></div>
+
+      <a href="${course.url}" class="group block pl-2 text-indigo-600 dark:text-indigo-400 hover:underline">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="inline-flex items-center rounded-full text-xs font-semibold px-2.5 py-1 bg-indigo-600/10 text-indigo-700 dark:text-indigo-300">
+            Upcoming
+          </span>
+          <span class="text-xl font-semibold text-indigo-600 dark:text-indigo-400 group-hover:underline">
+            ${course.title}
+          </span>
+        </div>
+
+        ${course.semester ? `
+          <p class="mt-1 text-sm text-gray-700 dark:text-gray-300">
+            ${metaText(course.semester, course.role, "dot")}
+          </p>
+        ` : ""}
+      </a>
+
+      <p class="mt-2 pl-2 text-sm text-gray-600 dark:text-gray-400">
+        Begins ${formatDate(start)} · Ends ${formatDate(end)}
+      </p>
+    `;
+
+    return li;
+  };
+
+  const makePreviousItem = (course) => {
+    const li = document.createElement("li");
+
+    li.innerHTML = `
+      <a href="${course.url}" class="text-indigo-600 dark:text-indigo-400 hover:underline">
+        ${course.title}
+        ${course.semester ? metaText(course.semester, course.role) : ""}
+      </a>
+    `;
+
+    return li;
+  };
+
+  document.querySelectorAll("#course-source .course-item").forEach((el) => {
+    const course = {
+      title: el.dataset.title,
+      url: el.dataset.url,
+      semester: el.dataset.semester,
+      role: el.dataset.role
+    };
+
+    const start = parseDate(el.dataset.start);
+    const end = parseDate(el.dataset.end);
+
+    if (start > today) {
+      upcomingList.appendChild(makeUpcomingCard(course, start, end));
+    } else if (start <= today && end >= today) {
+      currentList.appendChild(makeCurrentCard(course, start, end));
+    } else {
+      previousList.appendChild(makePreviousItem(course));
+    }
+  });
+
+  currentSection.classList.toggle("hidden", currentList.children.length === 0);
+  upcomingSection.classList.toggle("hidden", upcomingList.children.length === 0);
+  previousSection.classList.toggle("hidden", previousList.children.length === 0);
+
+  noCourses.classList.toggle(
+    "hidden",
+    currentList.children.length + upcomingList.children.length + previousList.children.length > 0
+  );
+});
+</script>
 {{ end }}

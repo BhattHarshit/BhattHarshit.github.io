@@ -1,0 +1,372 @@
+{{ define "main" }}
+<section id="top" class="max-w-5xl mx-auto px-6 py-5">
+
+  <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">{{ .Title }}</h1>
+
+  <a href="{{ "/research/" | relURL }}" class="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:underline mb-6">
+    ← Back to Research
+  </a>
+
+  {{ if eq .Params.pageType "talks" }}
+
+    <div class="prose dark:prose-invert max-w-none research-links talks-page">
+
+      <section id="upcoming-events-section" class="hidden">
+        <h3>Upcoming</h3>
+        <ul id="upcoming-events-list"></ul>
+      </section>
+
+      <section id="past-talks-section" class="hidden">
+        <h3 id="past-talks-heading">Past Participation</h3>
+        <ul id="past-talks-list"></ul>
+      </section>
+
+      <section id="organized-events-section" class="hidden">
+        <h3>Organized Events</h3>
+        <ul id="organized-events-list"></ul>
+      </section>
+
+      <ul id="event-source" class="hidden">
+        {{ range .Params.talks }}
+          {{ $title := .title }}
+          {{ $url := .url }}
+
+          <li
+            class="event-source-item"
+            data-kind="talk"
+            data-start="{{ .startDate }}"
+            data-end="{{ .endDate }}"
+          >
+            <strong>
+              {{ if $url }}
+                <a href="{{ $url }}" target="_blank" rel="noopener">{{ $title }}</a>
+              {{ else }}
+                <span class="research-title-no-link">{{ $title }}</span>
+              {{ end }}
+            </strong>
+
+            <span class="event-status-badge ongoing-badge hidden">Ongoing</span>
+
+            <br>
+            {{ with .role }}{{ . }}, {{ end }}{{ .location }}, {{ .dateText }}
+          </li>
+        {{ end }}
+
+        {{ range .Params.organizedEvents }}
+          {{ $title := .title }}
+          {{ $url := .url }}
+
+          <li
+            class="event-source-item"
+            data-kind="organized"
+            data-start="{{ .startDate }}"
+            data-end="{{ .endDate }}"
+          >
+            <strong>
+              {{ if $url }}
+                <a href="{{ $url }}" target="_blank" rel="noopener">{{ $title }}</a>
+              {{ else }}
+                <span class="research-title-no-link">{{ $title }}</span>
+              {{ end }}
+            </strong>
+
+            <span class="event-status-badge ongoing-badge hidden">Ongoing</span>
+
+            <br>
+            {{ with .role }}{{ . }}, {{ end }}{{ .location }}, {{ .dateText }}
+          </li>
+        {{ end }}
+      </ul>
+
+    </div>
+
+  {{ else if eq .Params.pageType "publications" }}
+
+    <div class="prose dark:prose-invert max-w-none research-links publication-page">
+
+      {{ with .Params.preprints }}
+        <section>
+          <h3>Preprints</h3>
+          <ul>
+            {{ range . }}
+              {{ $title := .title }}
+              {{ $url := .url }}
+
+              <li>
+                <strong>
+                  {{ if $url }}
+                    <a href="{{ $url }}" target="_blank" rel="noopener">{{ $title }}</a>
+                  {{ else }}
+                    <span class="research-title-no-link">{{ $title }}</span>
+                  {{ end }}
+                </strong><br>
+                {{ .authors | markdownify }}<br>
+                <em>{{ .venue | markdownify }}</em>
+              </li>
+            {{ end }}
+          </ul>
+        </section>
+      {{ end }}
+
+      {{ with .Params.publications }}
+        <section>
+          <h3>Peer-Reviewed Articles</h3>
+          <ul>
+            {{ range . }}
+              {{ $title := .title }}
+              {{ $url := .url }}
+
+              <li>
+                <strong>
+                  {{ if $url }}
+                    <a href="{{ $url }}" target="_blank" rel="noopener">{{ $title }}</a>
+                  {{ else }}
+                    <span class="research-title-no-link">{{ $title }}</span>
+                  {{ end }}
+                </strong><br>
+                {{ .authors | markdownify }}<br>
+                <em>{{ .venue | markdownify }}</em>
+              </li>
+            {{ end }}
+          </ul>
+        </section>
+      {{ end }}
+
+      {{ with .Params.reports }}
+        <section>
+          <h3>Research Reports and Technical Contributions</h3>
+          <ul>
+            {{ range . }}
+              {{ $title := .title }}
+              {{ $url := .url }}
+
+              <li>
+                <strong>
+                  {{ if $url }}
+                    <a href="{{ $url }}" target="_blank" rel="noopener">{{ $title }}</a>
+                  {{ else }}
+                    <span class="research-title-no-link">{{ $title }}</span>
+                  {{ end }}
+                </strong><br>
+                {{ .authors | markdownify }}<br>
+                <em>{{ .venue | markdownify }}</em>
+              </li>
+            {{ end }}
+          </ul>
+        </section>
+      {{ end }}
+
+      {{ if .Content }}
+        {{ .Content }}
+      {{ end }}
+
+    </div>
+
+  {{ else }}
+
+    {{ if .Content }}
+      <div class="prose dark:prose-invert max-w-none research-links">
+        {{ .Content }}
+      </div>
+    {{ end }}
+
+  {{ end }}
+
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const upcomingSection = document.getElementById("upcoming-events-section");
+  const upcomingList = document.getElementById("upcoming-events-list");
+
+  const pastTalksSection = document.getElementById("past-talks-section");
+  const pastTalksHeading = document.getElementById("past-talks-heading");
+  const pastTalksList = document.getElementById("past-talks-list");
+
+  const organizedSection = document.getElementById("organized-events-section");
+  const organizedList = document.getElementById("organized-events-list");
+
+  if (
+    !upcomingSection ||
+    !upcomingList ||
+    !pastTalksSection ||
+    !pastTalksHeading ||
+    !pastTalksList ||
+    !organizedSection ||
+    !organizedList
+  ) {
+    return;
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const parseDate = (value) => {
+    if (!value) return null;
+
+    const parts = String(value).split("-").map(Number);
+    if (parts.length !== 3 || parts.some(Number.isNaN)) return null;
+
+    const [y, m, d] = parts;
+    const date = new Date(y, m - 1, d);
+    date.setHours(0, 0, 0, 0);
+
+    return date;
+  };
+
+  const upcoming = [];
+  const pastTalks = [];
+  const organizedEvents = [];
+
+  document.querySelectorAll(".event-source-item").forEach((item) => {
+    const kind = item.dataset.kind;
+    const start = parseDate(item.dataset.start);
+    const end = parseDate(item.dataset.end);
+    const clone = item.cloneNode(true);
+
+    clone.classList.remove("event-source-item");
+
+    const ongoingBadge = clone.querySelector(".ongoing-badge");
+
+    const isUpcoming = start && start > today;
+    const isOngoing = start && start <= today && end && end >= today;
+
+    if (isUpcoming) {
+      ongoingBadge?.remove();
+
+      upcoming.push({
+        node: clone,
+        sortDate: start
+      });
+    } else {
+      if (isOngoing) {
+        ongoingBadge?.classList.remove("hidden");
+      } else {
+        ongoingBadge?.remove();
+      }
+
+      const event = {
+        node: clone,
+        sortDate: end || start || new Date(0)
+      };
+
+      if (kind === "organized") {
+        organizedEvents.push(event);
+      } else {
+        pastTalks.push(event);
+      }
+    }
+  });
+
+  upcoming.sort((a, b) => a.sortDate - b.sortDate);
+  pastTalks.sort((a, b) => b.sortDate - a.sortDate);
+  organizedEvents.sort((a, b) => b.sortDate - a.sortDate);
+
+  upcoming.forEach((event) => {
+    upcomingList.appendChild(event.node);
+  });
+
+  pastTalks.forEach((event) => {
+    pastTalksList.appendChild(event.node);
+  });
+
+  organizedEvents.forEach((event) => {
+    organizedList.appendChild(event.node);
+  });
+
+  const hasUpcoming = upcomingList.children.length > 0;
+  const hasPastTalks = pastTalksList.children.length > 0;
+  const hasOrganizedEvents = organizedList.children.length > 0;
+
+  upcomingSection.classList.toggle("hidden", !hasUpcoming);
+  pastTalksSection.classList.toggle("hidden", !hasPastTalks);
+  organizedSection.classList.toggle("hidden", !hasOrganizedEvents);
+
+  pastTalksHeading.classList.toggle("hidden", !hasUpcoming);
+
+  if (!hasUpcoming && hasPastTalks) {
+    pastTalksSection.classList.add("direct-list");
+  }
+});
+</script>
+
+<style>
+  .research-links a {
+    color: #111827;
+    text-decoration: none;
+    transition: color 0.25s ease;
+  }
+
+  .dark .research-links a {
+    color: #f3f4f6;
+  }
+
+  .research-links a:hover {
+    color: #111827;
+    text-decoration: underline;
+  }
+
+  .dark .research-links a:hover {
+    color: #f3f4f6;
+  }
+
+  .research-title-no-link {
+    font-weight: 500;
+  }
+
+  .event-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-left: 0.45rem;
+    padding: 0.12rem 0.55rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(79, 70, 229, 0.18);
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(99, 102, 241, 0.14));
+    color: #4f46e5;
+    font-size: 0.72rem;
+    font-weight: 650;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  .event-status-badge::before {
+    content: "";
+    width: 0.38rem;
+    height: 0.38rem;
+    border-radius: 9999px;
+    background: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.10);
+  }
+
+  .dark .event-status-badge {
+    border-color: rgba(129, 140, 248, 0.28);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.16), rgba(129, 140, 248, 0.10));
+    color: #a5b4fc;
+  }
+
+  .dark .event-status-badge::before {
+    background: #818cf8;
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.14);
+  }
+
+  .talks-page section:first-of-type h3,
+  .publication-page section:first-of-type h3 {
+    margin-top: 0;
+  }
+
+  .talks-page section,
+  .publication-page section {
+    margin-top: 1.75rem;
+  }
+
+  .talks-page section:first-of-type,
+  .publication-page section:first-of-type,
+  .talks-page section.direct-list {
+    margin-top: 0;
+  }
+</style>
+
+{{ end }}

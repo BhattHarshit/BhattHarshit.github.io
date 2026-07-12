@@ -2,7 +2,6 @@
 title: "MA 523 (651) — Linear Transformations and Matrix Theory"
 semester: "Summer 2026"
 role: "Instructor"
-date: 2026-05-09
 startDate: 2026-05-20
 endDate: 2026-08-04
 draft: false
