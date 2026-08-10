@@ -1,5 +1,6 @@
 ---
 title: "MA 131 — Calculus for Life and Management Sciences"
+type: "teaching"
 semester: "Fall 2024, 2023"
 role: "Teaching Assistant"
 date: 2024-08-15

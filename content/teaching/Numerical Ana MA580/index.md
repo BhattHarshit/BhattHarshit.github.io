@@ -1,5 +1,6 @@
 ---
 title: "MA 580 (601) — Numerical Analysis I"
+type: "teaching"
 semester: "Spring 2026, 2025"
 role: "Instructor"
 date: 2026-01-12
@@ -8,7 +9,7 @@ draft: false
 ---
 
 ## **Course Description**  
-MA 580 explores the theory and practice of numerical algorithms for solving fundamental problems in linear algebra and scientific computing. The course develops techniques for solving systems of equations, performing matrix factorizations, and applying iterative methods — all with a focus on computational efficiency, stability, and accuracy.
+MA 580 explores the theory and practice of numerical algorithms for solving fundamental problems in linear algebra and scientific computing. This course develops techniques for solving systems of equations, performing matrix factorizations, and applying iterative methods with a focus on computational efficiency and accuracy. The course offers detailed lectures recorded by [Prof. Tim Kelly](https://math.sciences.ncsu.edu/people/ctk/).
 
 **Topics Covered**
 - Floating-point arithmetic and roundoff error

@@ -1,0 +1,20 @@
+{{ define "main" }}
+<section id="top" class="max-w-5xl mx-auto px-6 py-5">
+
+  <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+    {{ .Title }}
+  </h1>
+
+  <a href="{{ "/teaching/" | relURL }}"
+     class="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:underline mb-6">
+    ← Back to Teaching
+  </a>
+
+  {{ if .Content }}
+    <div class="prose dark:prose-invert max-w-none text-lg text-gray-700 dark:text-gray-300">
+      {{ .Content }}
+    </div>
+  {{ end }}
+
+</section>
+{{ end }}
