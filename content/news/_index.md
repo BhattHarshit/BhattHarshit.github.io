@@ -5,6 +5,14 @@ date: 2026-07-05
 draft: false
 
 news:
+  - slug: ""
+    title: "Build your website with ease!"
+    date: "2026-09-14"
+    # image: ""
+    url: "https://bhattharshit.github.io/explore/academic-websites/"
+    paragraphs:
+      - "Released a collection of open-source templates for building professional academic websites; check it out to go live."
+    
   - slug: "gsa-outstanding-teaching-assistant-award"
     title: "Received the Outstanding Teaching Assistant Award"
     date: "2026-04-22"

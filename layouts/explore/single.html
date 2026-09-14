@@ -1,0 +1,112 @@
+{{ define "main" }}
+<section id="top" class="max-w-5xl mx-auto px-6 py-5">
+
+  <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+    {{ .Title }}
+  </h1>
+
+  <a href="{{ "/explore/" | relURL }}"
+     class="inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:underline mb-6">
+    <i class="fas fa-arrow-left mr-2"></i>
+    Back to Explore
+  </a>
+
+  {{ if .Content }}
+    <div class="explore-content prose dark:prose-invert max-w-none text-lg text-gray-700 dark:text-gray-300">
+      {{ .Content }}
+    </div>
+  {{ end }}
+
+</section>
+
+<style>
+  /* Demo / repository links */
+  .explore-content h3 + p + p {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+  }
+
+  .explore-content h3 + p + p a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.45rem 0.8rem;
+    border-radius: 0.6rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    text-decoration: none;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  /* See Live Demo */
+  .explore-content h3 + p + p a:first-child {
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    color: #4f46e5;
+  }
+
+  /* Small play symbol */
+  .explore-content h3 + p + p a:first-child::before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 6px solid currentColor;
+  }
+
+  .explore-content h3 + p + p a:first-child:hover {
+    background: #e0e7ff;
+    border-color: #a5b4fc;
+    color: #4338ca;
+    transform: translateY(-1px);
+  }
+
+  /* Repository */
+  .explore-content h3 + p + p a:last-child {
+    background: transparent;
+    border: 1px solid #d1d5db;
+    color: #4b5563;
+  }
+
+  .explore-content h3 + p + p a:last-child:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+    color: #374151;
+    transform: translateY(-1px);
+  }
+
+  /* Dark mode */
+  .dark .explore-content h3 + p + p a:first-child {
+    background: rgba(99, 102, 241, 0.12);
+    border-color: #4f46e5;
+    color: #a5b4fc;
+  }
+
+  .dark .explore-content h3 + p + p a:first-child:hover {
+    background: rgba(99, 102, 241, 0.22);
+    border-color: #6366f1;
+    color: #c7d2fe;
+  }
+
+  .dark .explore-content h3 + p + p a:last-child {
+    background: transparent;
+    border-color: #4b5563;
+    color: #d1d5db;
+  }
+
+  .dark .explore-content h3 + p + p a:last-child:hover {
+    background: #1f2937;
+    border-color: #6b7280;
+    color: #f3f4f6;
+  }
+</style>
+{{ end }}

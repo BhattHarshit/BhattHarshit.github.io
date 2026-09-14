@@ -19,7 +19,7 @@
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-12 px-6">
         {{ range $mytools.ByWeight }}
           {{ $p := . }}
-          {{ $href := or $p.Params.external_url $p.Permalink }}
+          {{ $href := or $p.Params.external_url $p.RelPermalink }}
           {{ $isExternal := hasPrefix $href "http" }}
           {{ $imgRes := $p.Resources.GetMatch ($p.Params.image) }}
           {{ $alt := or $p.Params.alt $p.Title }}
@@ -100,7 +100,7 @@
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-12 py-7 px-1">
         {{ range $others.ByWeight }}
           {{ $p := . }}
-          {{ $href := or $p.Params.external_url $p.Permalink }}
+          {{ $href := or $p.Params.external_url $p.RelPermalink }}
           {{ $isExternal := hasPrefix $href "http" }}
           {{ $imgRes := $p.Resources.GetMatch ($p.Params.image) }}
           {{ $alt := or $p.Params.alt $p.Title }}
