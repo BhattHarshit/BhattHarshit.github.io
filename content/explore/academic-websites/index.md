@@ -7,7 +7,7 @@ my_tool: true
 description: "Open-source templates for building professional academic websites."
 ---
 
-I maintain these open-source templates for professional academic websites, from a lightweight Hugo starter to a feature-rich Jekyll design:
+I maintain these open-source templates for professional academic websites, from a lightweight Hugo starter to a feature-rich Jekyll design: 
 
 ### 1. Academic Starter
 
@@ -29,10 +29,19 @@ A feature-rich **Jekyll** academic website based on **al-folio**, with a redesig
 
 ---
 
-<p class="text-gray-500 dark:text-gray-400 text-sm mt-8">
-  <a href="https://github.com/BhattHarshit/academic-signature">Academic Signature</a>
-  is based on the open-source
-  <a href="https://github.com/alshedivat/al-folio">al-folio</a> project.
-  The Hugo templates are independent implementations. See the respective repositories
-  for licensing, acknowledgements, and attribution.
-</p>
+### Other established options
+
+<div class="text-gray-500 dark:text-gray-400 text-sm">
+
+If you prefer a different ecosystem or workflow, these well-established alternatives are also worth considering:
+
+- [**Academic Pages**](https://github.com/academicpages/academicpages.github.io) — a good choice for a traditional **Jekyll + GitHub Pages** academic portfolio with all standard academic sections.
+
+- [**al-folio**](https://github.com/alshedivat/al-folio) — useful when you want a mature, feature-rich **Jekyll** ecosystem with BibTeX publications, and extensive customization.
+
+- [**HugoBlox Academic CV**](https://github.com/HugoBlox/hugo-theme-academic-cv) — useful if you prefer **Hugo** with a larger block-based ecosystem, visual editing, and integrations for Markdown, BibTeX, Jupyter, and LaTeX.
+
+- [**Quarto Academic Website Template**](https://github.com/drganghe/quarto-academic-website-template) — particularly useful if your existing research workflow already uses **Quarto, RStudio, or Jupyter** and you want the website to follow the same `.qmd`-based workflow.
+
+</div>
+
